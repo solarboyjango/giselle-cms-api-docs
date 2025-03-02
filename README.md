@@ -195,3 +195,39 @@ A user wants to upload a new document to an existing knowledge base.
 3. Receive a response confirming successful upload.
 
 ---
+
+### 3. Update Knowledge Base Name
+**Method:** `PUT`  
+**Endpoint:** `/sources/{source_id}`  
+**Description:** Updates the name of a specific knowledge base.
+
+**Request Headers:**
+- `X-API-Key: cms_12345`
+
+**Request Parameters:**
+- `source_id` *(string, required)* - The ID of the knowledge base to update.
+
+**Request Body:**
+```json
+{
+  "name": "Updated Knowledge Base Name"
+}
+```
+
+**Response Example:**
+```json
+{
+  "message": "Knowledge base name updated successfully",
+  "source_id": "123",
+  "new_name": "Updated Knowledge Base Name"
+}
+```
+
+**Status Codes:**  
+- `200 OK` - Knowledge base name successfully updated
+- `400 Bad Request` - Invalid request format or missing parameters
+- `403 Forbidden` - Missing or invalid API Key
+- `404 Not Found` - Knowledge base not found
+- `500 Internal Server Error` - Server-side error
+
+---
