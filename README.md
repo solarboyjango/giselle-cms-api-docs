@@ -195,9 +195,3 @@ A user wants to upload a new document to an existing knowledge base.
 3. Receive a response confirming successful upload.
 
 ---
-
-## Next Steps
-- Implement API Key authentication in FastAPI middleware.
-- Define monitoring and logging for API access.
-- Expand API functionality as needed.
-
