@@ -1,6 +1,5 @@
 # giselle-cms-api-docs
 
-# Chatbot Giselle API Documentation
 
 ## Overview
 This document provides an overview of the API endpoints available for managing knowledge base documents in the backend service. The API is designed based on the Retrieval-Augmented Generation (RAG) framework to support document retrieval and response generation.
