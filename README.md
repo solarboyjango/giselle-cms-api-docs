@@ -193,6 +193,7 @@ X-API-Key: cms_12345
     {
       "file_id": "A1B2",
       "name": "policy.docx",
+      "url": "https://markdownlivepreview-1.com",
       "uploader": "user@example.com",
       "start_at": "2024-03-01T00:00:00Z",
       "end_at": "2024-06-01T00:00:00Z",
@@ -202,6 +203,7 @@ X-API-Key: cms_12345
     {
       "file_id": "C3D4",
       "name": "guidelines.pdf",
+      "url": "https://markdownlivepreview-2.com",
       "uploader": "admin@example.com",
       "start_at": "2024-01-01T00:00:00Z",
       "end_at": null,
@@ -221,6 +223,7 @@ X-API-Key: cms_12345
 | `files`       | `array`   | List of files in the specified knowledge base. |
 | `file_id`     | `string`  | The unique ID of the file. |
 | `name`    | `string`  | The name of the file. |
+| `url`    | `string`  | The downloading url of the file. |
 | `uploader`    | `string`  | The email or username of the user who uploaded the file. |
 | `start_at`    | `string`  | The start date of the file's availability (ISO 8601). If `null`, the file is available immediately. |
 | `end_at`      | `string`  | The end date of the file's availability (ISO 8601). If `null`, the file remains available indefinitely. |
@@ -481,4 +484,5 @@ A developer wants to retrieve all available knowledge bases in the system to all
 
 ### Use Case 2: Uploading a Document to a Knowledge Base
 A user wants to upload a new document to an existing knowledge base.
+
 
