@@ -132,7 +132,41 @@ X-API-Key: cms_12345
 
 
 
+### 2. Update Knowledge Base Name
+**Method:** `PUT`  
+**Endpoint:** `/sources/{source_id}`  
+**Description:** Updates the name of a specific knowledge base.
 
+#### Request Parameters
+| Parameter   | Type   | Required | Description |
+|------------|--------|----------|-------------|
+| `source_id` | `string` | Yes | The unique ID of the knowledge base to update. |
+
+#### Request Body
+```json
+{
+  "name": "New_Knowledge_Base_Name"
+}
+```
+| Parameter | Type   | Required | Description |
+|----------|--------|----------|-------------|
+| `name`   | `string` | Yes | The new name of the knowledge base. |
+
+#### Response Example
+```json
+{
+  "message": "Knowledge base name updated successfully."
+}
+```
+
+#### Status Codes
+- `200 OK` - Successfully updated  
+- `400 Bad Request` - Invalid parameters (e.g., missing `name` or invalid `source_id`)  
+- `403 Forbidden` - Missing or invalid API Key  
+- `404 Not Found` - Knowledge base not found  
+- `500 Internal Server Error` - Server-side error  
+
+---
 
 ### 3. Retrieve Files in a Knowledge Base
 **Method:** `GET`  
@@ -146,7 +180,7 @@ X-API-Key: cms_12345
 | `page`       | `integer` | No | The page number. Default: `1`. |
 | `page_size`  | `integer` | No | Number of items per page. Default: `10`. |
 | `query`      | `string`  | No | Search keyword to filter file names. |
-| `sort_by`    | `string`  | No | Field to sort by (e.g., `filename`, `created_at`). Default: `filename`. |
+| `sort_by`    | `string`  | No | Field to sort by (e.g., `name`, `created_at`). Default: `name`. |
 | `sort_order` | `string`  | No | Sorting order (`asc` for ascending, `desc` for descending). Default: `asc`. |
 
 #### Response Example
@@ -158,7 +192,7 @@ X-API-Key: cms_12345
   "files": [
     {
       "file_id": "A1B2",
-      "filename": "policy.docx",
+      "name": "policy.docx",
       "uploader": "user@example.com",
       "start_at": "2024-03-01T00:00:00Z",
       "end_at": "2024-06-01T00:00:00Z",
@@ -167,7 +201,7 @@ X-API-Key: cms_12345
     },
     {
       "file_id": "C3D4",
-      "filename": "guidelines.pdf",
+      "name": "guidelines.pdf",
       "uploader": "admin@example.com",
       "start_at": "2024-01-01T00:00:00Z",
       "end_at": null,
@@ -186,7 +220,7 @@ X-API-Key: cms_12345
 | `page_size`   | `integer` | Number of files returned per page. |
 | `files`       | `array`   | List of files in the specified knowledge base. |
 | `file_id`     | `string`  | The unique ID of the file. |
-| `filename`    | `string`  | The name of the file. |
+| `name`    | `string`  | The name of the file. |
 | `uploader`    | `string`  | The email or username of the user who uploaded the file. |
 | `start_at`    | `string`  | The start date of the file's availability (ISO 8601). If `null`, the file is available immediately. |
 | `end_at`      | `string`  | The end date of the file's availability (ISO 8601). If `null`, the file remains available indefinitely. |
@@ -212,13 +246,13 @@ X-API-Key: cms_12345
 | Parameter   | Type    | Required | Description |
 |------------|---------|----------|-------------|
 | `source_id`  | `string`  | Yes | The unique ID of the knowledge base. |
-| `filenames`  | `array`   | Yes | A list of filenames to check for duplicates. |
+| `names`  | `array`   | Yes | A list of filenames to check for duplicates. |
 
 #### Request Body
 ```json
 {
   "source_id": "123",
-  "filenames": ["report.docx", "summary.pdf"]
+  "names": ["report.docx", "summary.pdf"]
 }
 ```
 
@@ -236,7 +270,7 @@ X-API-Key: cms_12345
 
 #### Status Codes
 - `200 OK` - Successful check  
-- `400 Bad Request` - Invalid parameters (e.g., missing `source_id`, empty `filenames` list)  
+- `400 Bad Request` - Invalid parameters (e.g., missing `source_id`, empty `names` list)  
 - `403 Forbidden` - Missing or invalid API Key  
 - `404 Not Found` - Knowledge base not found  
 - `500 Internal Server Error` - Server-side error  
@@ -258,7 +292,7 @@ X-API-Key: cms_12345
 | `start_at`   | `string`  | Yes | The start date of the file's availability (ISO 8601). If `null`, the file is available immediately. |
 | `end_at`     | `string`  | Yes | The end date of the file's availability (ISO 8601). If `null`, the file remains available indefinitely. |
 | `files`      | `array`   | Yes | A list of files to be uploaded. |
-| `filename`   | `string`  | Yes | The name of the file being uploaded. |
+| `name`   | `string`  | Yes | The name of the file being uploaded. |
 | `content`    | `string`  | Yes | The base64-encoded file content. |
 
 #### Request Body
@@ -269,8 +303,8 @@ X-API-Key: cms_12345
   "start_at": "2024-03-01T00:00:00Z",
   "end_at": "2024-06-01T00:00:00Z",
   "files": [
-    {"filename": "report.docx", "content": "base64_encoded_data"},
-    {"filename": "summary.pdf", "content": "base64_encoded_data"}
+    {"name": "report.docx", "content": "base64_encoded_data"},
+    {"name": "summary.pdf", "content": "base64_encoded_data"}
   ]
 }
 ```
@@ -309,7 +343,7 @@ X-API-Key: cms_12345
 | `source_id`  | `string`  | Yes | The unique ID of the knowledge base. |
 | `uploader`   | `string`  | Yes | The email or username of the user overwriting the files. |
 | `files`      | `array`   | Yes | A list of files to be overwritten. |
-| `filename`   | `string`  | Yes | The name of the file being overwritten. |
+| `name`   | `string`  | Yes | The name of the file being overwritten. |
 | `content`    | `string`  | Yes | The base64-encoded updated file content. |
 
 #### Request Body
@@ -318,7 +352,7 @@ X-API-Key: cms_12345
   "source_id": "123",
   "uploader": "user@example.com",
   "files": [
-    {"filename": "report.docx", "content": "updated_base64_encoded_data"}
+    {"name": "report.docx", "content": "updated_base64_encoded_data"}
   ]
 }
 ```
@@ -447,5 +481,4 @@ A developer wants to retrieve all available knowledge bases in the system to all
 
 ### Use Case 2: Uploading a Document to a Knowledge Base
 A user wants to upload a new document to an existing knowledge base.
-
 
