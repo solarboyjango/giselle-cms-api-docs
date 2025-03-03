@@ -19,70 +19,120 @@ X-API-Key: cms_12345
 ### 1. Retrieve Knowledge Bases
 **Method:** `GET`  
 **Endpoint:** `/sources`  
-**Description:** Retrieves a list of available knowledge bases.
+**Description:** Retrieves a list of available knowledge bases. Supports sorting and searching.
 
 #### Request Parameters
-None
+| Parameter   | Type    | Required | Description |
+|------------|---------|----------|-------------|
+| `query`      | `string`  | No | Search keyword to filter knowledge bases by name or category. |
+| `sort_by`    | `string`  | No | Field to sort by (e.g., `name`, `created_at`). Default: `name`. |
+| `sort_order` | `string`  | No | Sorting order (`asc` for ascending, `desc` for descending). Default: `asc`. |
 
 #### Response Example
 ```json
 {
-  "sources": [
-    {"source_id": "123", "name": "HR Documents"},
-    {"source_id": "456", "name": "Legal Policies"}
-  ]
+  "status_code": 200,
+  "message": "Knowledge bases retrieved successfully.",
+  "data": {
+    "sources": [
+      {
+        "source_id": "123",
+        "name": "HR Documents",
+        "category": "Human Resources",
+        "prompt": "Retrieve HR policies and guidelines",
+        "created_at": "2024-02-20T12:34:56Z",
+        "updated_at": "2024-02-25T10:00:00Z",
+        "status": "active"
+      },
+      {
+        "source_id": "456",
+        "name": "Legal Policies",
+        "category": "Legal",
+        "prompt": "Access corporate legal compliance documents",
+        "created_at": "2024-01-15T08:00:00Z",
+        "updated_at": "2024-01-20T14:30:00Z",
+        "status": "inactive"
+      }
+    ]
+  }
 }
 ```
 
 #### Response Parameters
-| Parameter   | Type   | Description |
-|------------|--------|-------------|
-| `sources`   | `array`  | A list of available knowledge bases. |
-| `source_id` | `string` | The unique ID of the knowledge base. |
-| `name`      | `string` | The name of the knowledge base. |
+| Parameter   | Type    | Description |
+|------------|---------|-------------|
+| `status_code` | `integer` | HTTP status code of the response. |
+| `message`    | `string`  | A confirmation message indicating success. |
+| `data`       | `object`  | The response data containing the list of knowledge bases. |
+| `sources`    | `array`   | A list of available knowledge bases. |
+| `source_id`  | `string`  | The unique ID of the knowledge base. |
+| `name`       | `string`  | The name of the knowledge base. |
+| `category`   | `string`  | The category associated with the knowledge base. |
+| `prompt`     | `string`  | A short description or recommended usage for the knowledge base. |
+| `created_at` | `string`  | The timestamp when the knowledge base was created (ISO 8601 format). |
+| `updated_at` | `string`  | The timestamp of the last update to the knowledge base (ISO 8601 format). |
+| `status`     | `string`  | The current status of the knowledge base (`active` for enabled, `inactive` for disabled). |
 
 #### Status Codes
 - `200 OK` - Successful retrieval  
+- `400 Bad Request` - Invalid parameters (e.g., incorrect `sort_by` field)  
 - `403 Forbidden` - Missing or invalid API Key  
 - `500 Internal Server Error` - Server-side error  
 
 ---
-
-### 2. Update Knowledge Base Name
+### 2. Update Knowledge Base Details
 **Method:** `PUT`  
 **Endpoint:** `/sources/{source_id}`  
-**Description:** Updates the name of a specific knowledge base.
+**Description:** Updates the details of a specific knowledge base, including name, prompt, or status.
 
 #### Request Parameters
-| Parameter   | Type   | Required | Description |
-|------------|--------|----------|-------------|
-| `source_id` | `string` | Yes | The unique ID of the knowledge base to update. |
+| Parameter   | Type    | Required | Description |
+|------------|---------|----------|-------------|
+| `source_id`  | `string`  | Yes | The unique ID of the knowledge base to update. |
 
 #### Request Body
 ```json
 {
-  "name": "New_Knowledge_Base_Name"
+  "name": "Updated Knowledge Base Name",
+  "prompt": "Updated prompt description",
+  "status": "active"
 }
 ```
-| Parameter | Type   | Required | Description |
-|----------|--------|----------|-------------|
-| `name`   | `string` | Yes | The new name of the knowledge base. |
+
+#### Request Body Parameters
+| Parameter | Type    | Required | Description |
+|----------|---------|----------|-------------|
+| `name`   | `string` | No | The new name of the knowledge base. |
+| `prompt` | `string` | No | The new description or recommended usage of the knowledge base. |
+| `status` | `string` | No | The status of the knowledge base (`active` for enabled, `inactive` for disabled). |
 
 #### Response Example
 ```json
 {
-  "message": "Knowledge base name updated successfully."
+  "status_code": 200,
+  "message": "Knowledge base details updated successfully."
 }
 ```
 
+#### Response Parameters
+| Parameter   | Type    | Description |
+|------------|---------|-------------|
+| `status_code` | `integer` | HTTP status code of the response. |
+| `message`    | `string`  | A confirmation message indicating success. |
+
 #### Status Codes
 - `200 OK` - Successfully updated  
-- `400 Bad Request` - Invalid parameters (e.g., missing `name` or invalid `source_id`)  
+- `400 Bad Request` - Invalid parameters (e.g., incorrect `status` value)  
 - `403 Forbidden` - Missing or invalid API Key  
 - `404 Not Found` - Knowledge base not found  
 - `500 Internal Server Error` - Server-side error  
 
 ---
+
+
+
+
+
 
 ### 3. Retrieve Files in a Knowledge Base
 **Method:** `GET`  
