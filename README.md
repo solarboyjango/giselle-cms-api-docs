@@ -24,7 +24,7 @@ X-API-Key: cms_12345
 #### Request Parameters
 | Parameter   | Type    | Required | Description |
 |------------|---------|----------|-------------|
-| `query`      | `string`  | No | Search keyword to filter knowledge bases by name or category. |
+| `query`      | `string`  | No | Search keyword to filter knowledge bases by name or prompt. |
 | `sort_by`    | `string`  | No | Field to sort by (e.g., `name`, `created_at`). Default: `name`. |
 | `sort_order` | `string`  | No | Sorting order (`asc` for ascending, `desc` for descending). Default: `asc`. |
 
@@ -38,7 +38,6 @@ X-API-Key: cms_12345
       {
         "source_id": "123",
         "name": "HR Documents",
-        "category": "Human Resources",
         "prompt": "Retrieve HR policies and guidelines",
         "created_at": "2024-02-20T12:34:56Z",
         "updated_at": "2024-02-25T10:00:00Z",
@@ -47,7 +46,6 @@ X-API-Key: cms_12345
       {
         "source_id": "456",
         "name": "Legal Policies",
-        "category": "Legal",
         "prompt": "Access corporate legal compliance documents",
         "created_at": "2024-01-15T08:00:00Z",
         "updated_at": "2024-01-20T14:30:00Z",
@@ -67,7 +65,6 @@ X-API-Key: cms_12345
 | `sources`    | `array`   | A list of available knowledge bases. |
 | `source_id`  | `string`  | The unique ID of the knowledge base. |
 | `name`       | `string`  | The name of the knowledge base. |
-| `category`   | `string`  | The category associated with the knowledge base. |
 | `prompt`     | `string`  | A short description or recommended usage for the knowledge base. |
 | `created_at` | `string`  | The timestamp when the knowledge base was created (ISO 8601 format). |
 | `updated_at` | `string`  | The timestamp of the last update to the knowledge base (ISO 8601 format). |
@@ -78,6 +75,9 @@ X-API-Key: cms_12345
 - `400 Bad Request` - Invalid parameters (e.g., incorrect `sort_by` field)  
 - `403 Forbidden` - Missing or invalid API Key  
 - `500 Internal Server Error` - Server-side error  
+
+
+
 
 ---
 ### 2. Update Knowledge Base Details
