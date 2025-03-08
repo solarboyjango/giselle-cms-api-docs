@@ -18,7 +18,7 @@ X-API-Key: cms_12345
 
 ### 1. Retrieve Knowledge Bases
 **Method:** `GET`  
-**Endpoint:** `/sources`  
+**Endpoint:** `/folders`  
 **Description:** Retrieves a list of available knowledge bases. Supports sorting and searching.
 
 #### Request Parameters
@@ -34,9 +34,9 @@ X-API-Key: cms_12345
   "status_code": 200,
   "message": "Knowledge bases retrieved successfully.",
   "data": {
-    "sources": [
+    "folders": [
       {
-        "source_id": "123",
+        "folder_id": "123",
         "name": "HR Documents",
         "prompt": "Retrieve HR policies and guidelines",
         "created_at": "2024-02-20T12:34:56Z",
@@ -44,7 +44,7 @@ X-API-Key: cms_12345
         "status": "active"
       },
       {
-        "source_id": "456",
+        "folder_id": "456",
         "name": "Legal Policies",
         "prompt": "Access corporate legal compliance documents",
         "created_at": "2024-01-15T08:00:00Z",
@@ -62,8 +62,8 @@ X-API-Key: cms_12345
 | `status_code` | `integer` | HTTP status code of the response. |
 | `message`    | `string`  | A confirmation message indicating success. |
 | `data`       | `object`  | The response data containing the list of knowledge bases. |
-| `sources`    | `array`   | A list of available knowledge bases. |
-| `source_id`  | `string`  | The unique ID of the knowledge base. |
+| `folders`    | `array`   | A list of available knowledge bases. |
+| `folder_id`  | `string`  | The unique ID of the knowledge base. |
 | `name`       | `string`  | The name of the knowledge base. |
 | `prompt`     | `string`  | A short description or recommended usage for the knowledge base. |
 | `created_at` | `string`  | The timestamp when the knowledge base was created (ISO 8601 format). |
@@ -82,13 +82,13 @@ X-API-Key: cms_12345
 ---
 ### 2. Update Knowledge Base Details
 **Method:** `PUT`  
-**Endpoint:** `/sources/{source_id}`  
+**Endpoint:** `/folders/{folder_id}`  
 **Description:** Updates the details of a specific knowledge base, including name, prompt, or status.
 
 #### Request Parameters
 | Parameter   | Type    | Required | Description |
 |------------|---------|----------|-------------|
-| `source_id`  | `string`  | Yes | The unique ID of the knowledge base to update. |
+| `folder_id`  | `string`  | Yes | The unique ID of the knowledge base to update. |
 
 #### Request Body
 ```json
@@ -134,13 +134,13 @@ X-API-Key: cms_12345
 
 ### 2. Update Knowledge Base Name
 **Method:** `PUT`  
-**Endpoint:** `/sources/{source_id}`  
+**Endpoint:** `/folders/{folder_id}`  
 **Description:** Updates the name of a specific knowledge base.
 
 #### Request Parameters
 | Parameter   | Type   | Required | Description |
 |------------|--------|----------|-------------|
-| `source_id` | `string` | Yes | The unique ID of the knowledge base to update. |
+| `folder_id` | `string` | Yes | The unique ID of the knowledge base to update. |
 
 #### Request Body
 ```json
@@ -161,7 +161,7 @@ X-API-Key: cms_12345
 
 #### Status Codes
 - `200 OK` - Successfully updated  
-- `400 Bad Request` - Invalid parameters (e.g., missing `name` or invalid `source_id`)  
+- `400 Bad Request` - Invalid parameters (e.g., missing `name` or invalid `folder_id`)  
 - `403 Forbidden` - Missing or invalid API Key  
 - `404 Not Found` - Knowledge base not found  
 - `500 Internal Server Error` - Server-side error  
@@ -170,13 +170,13 @@ X-API-Key: cms_12345
 
 ### 3. Retrieve Files in a Knowledge Base
 **Method:** `GET`  
-**Endpoint:** `/files/source/{source_id}`  
+**Endpoint:** `/files/folder/{folder_id}`  
 **Description:** Retrieves all files in a specific knowledge base. Supports pagination, sorting, and search.
 
 #### Request Parameters
 | Parameter   | Type    | Required | Description |
 |------------|---------|----------|-------------|
-| `source_id`  | `string`  | Yes | The unique ID of the knowledge base. |
+| `folder_id`  | `string`  | Yes | The unique ID of the knowledge base. |
 | `page`       | `integer` | No | The page number. Default: `1`. |
 | `page_size`  | `integer` | No | Number of items per page. Default: `10`. |
 | `query`      | `string`  | No | Search keyword to filter file names. |
@@ -232,7 +232,7 @@ X-API-Key: cms_12345
 
 #### Status Codes
 - `200 OK` - Successful retrieval  
-- `400 Bad Request` - Invalid parameters (e.g., incorrect `source_id`, invalid `page` value)  
+- `400 Bad Request` - Invalid parameters (e.g., incorrect `folder_id`, invalid `page` value)  
 - `403 Forbidden` - Missing or invalid API Key  
 - `404 Not Found` - Knowledge base not found  
 - `500 Internal Server Error` - Server-side error  
@@ -248,13 +248,13 @@ X-API-Key: cms_12345
 #### Request Parameters
 | Parameter   | Type    | Required | Description |
 |------------|---------|----------|-------------|
-| `source_id`  | `string`  | Yes | The unique ID of the knowledge base. |
+| `folder_id`  | `string`  | Yes | The unique ID of the knowledge base. |
 | `names`  | `array`   | Yes | A list of filenames to check for duplicates. |
 
 #### Request Body
 ```json
 {
-  "source_id": "123",
+  "folder_id": "123",
   "names": ["report.docx", "summary.pdf"]
 }
 ```
@@ -273,7 +273,7 @@ X-API-Key: cms_12345
 
 #### Status Codes
 - `200 OK` - Successful check  
-- `400 Bad Request` - Invalid parameters (e.g., missing `source_id`, empty `names` list)  
+- `400 Bad Request` - Invalid parameters (e.g., missing `folder_id`, empty `names` list)  
 - `403 Forbidden` - Missing or invalid API Key  
 - `404 Not Found` - Knowledge base not found  
 - `500 Internal Server Error` - Server-side error  
@@ -290,7 +290,7 @@ X-API-Key: cms_12345
 #### Request Parameters
 | Parameter   | Type    | Required | Description |
 |------------|---------|----------|-------------|
-| `source_id`  | `string`  | Yes | The unique ID of the knowledge base. |
+| `folder_id`  | `string`  | Yes | The unique ID of the knowledge base. |
 | `uploader`   | `string`  | Yes | The email or username of the user uploading the files. |
 | `start_at`   | `string`  | Yes | The start date of the file's availability (ISO 8601). If `null`, the file is available immediately. |
 | `end_at`     | `string`  | Yes | The end date of the file's availability (ISO 8601). If `null`, the file remains available indefinitely. |
@@ -301,7 +301,7 @@ X-API-Key: cms_12345
 #### Request Body
 ```json
 {
-  "source_id": "123",
+  "folder_id": "123",
   "uploader": "user@example.com",
   "start_at": "2024-03-01T00:00:00Z",
   "end_at": "2024-06-01T00:00:00Z",
@@ -328,7 +328,7 @@ X-API-Key: cms_12345
 
 #### Status Codes
 - `201 Created` - Files successfully uploaded  
-- `400 Bad Request` - Invalid parameters (e.g., missing `source_id`, empty `files` list, or incorrect `start_at`/`end_at` format)  
+- `400 Bad Request` - Invalid parameters (e.g., missing `folder_id`, empty `files` list, or incorrect `start_at`/`end_at` format)  
 - `403 Forbidden` - Missing or invalid API Key  
 - `500 Internal Server Error` - Server-side error  
 
@@ -343,7 +343,7 @@ X-API-Key: cms_12345
 #### Request Parameters
 | Parameter   | Type    | Required | Description |
 |------------|---------|----------|-------------|
-| `source_id`  | `string`  | Yes | The unique ID of the knowledge base. |
+| `folder_id`  | `string`  | Yes | The unique ID of the knowledge base. |
 | `uploader`   | `string`  | Yes | The email or username of the user overwriting the files. |
 | `files`      | `array`   | Yes | A list of files to be overwritten. |
 | `name`   | `string`  | Yes | The name of the file being overwritten. |
@@ -352,7 +352,7 @@ X-API-Key: cms_12345
 #### Request Body
 ```json
 {
-  "source_id": "123",
+  "folder_id": "123",
   "uploader": "user@example.com",
   "files": [
     {"name": "report.docx", "content": "updated_base64_encoded_data"}
@@ -376,7 +376,7 @@ X-API-Key: cms_12345
 
 #### Status Codes
 - `200 OK` - Files successfully overwritten  
-- `400 Bad Request` - Invalid parameters (e.g., missing `source_id`, empty `files` list, or non-existent file)  
+- `400 Bad Request` - Invalid parameters (e.g., missing `folder_id`, empty `files` list, or non-existent file)  
 - `403 Forbidden` - Missing or invalid API Key  
 - `404 Not Found` - Knowledge base or file not found  
 - `500 Internal Server Error` - Server-side error  
@@ -392,13 +392,13 @@ X-API-Key: cms_12345
 #### Request Parameters
 | Parameter   | Type    | Required | Description |
 |------------|---------|----------|-------------|
-| `source_id`  | `string`  | Yes | The unique ID of the knowledge base. |
+| `folder_id`  | `string`  | Yes | The unique ID of the knowledge base. |
 | `file_ids`   | `array`   | Yes | A list of file IDs to be deleted. |
 
 #### Request Body
 ```json
 {
-  "source_id": "123",
+  "folder_id": "123",
   "file_ids": ["A1B2", "C3D4"]
 }
 ```
@@ -419,7 +419,7 @@ X-API-Key: cms_12345
 
 #### Status Codes
 - `200 OK` - Files successfully deleted  
-- `400 Bad Request` - Invalid parameters (e.g., missing `source_id`, empty `file_ids` list, or non-existent file)  
+- `400 Bad Request` - Invalid parameters (e.g., missing `folder_id`, empty `file_ids` list, or non-existent file)  
 - `403 Forbidden` - Missing or invalid API Key  
 - `404 Not Found` - Knowledge base or file not found  
 - `500 Internal Server Error` - Server-side error  
