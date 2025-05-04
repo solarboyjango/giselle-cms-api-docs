@@ -41,7 +41,8 @@ X-API-Key: cms_12345
         "prompt": "Retrieve HR policies and guidelines",
         "created_at": "2024-02-20T12:34:56Z",
         "updated_at": "2024-02-25T10:00:00Z",
-        "status": "active"
+        "status": "active",
+        "type": "knowledge_base"
       },
       {
         "folder_id": "456",
@@ -49,7 +50,8 @@ X-API-Key: cms_12345
         "prompt": "Access corporate legal compliance documents",
         "created_at": "2024-01-15T08:00:00Z",
         "updated_at": "2024-01-20T14:30:00Z",
-        "status": "inactive"
+        "status": "inactive",
+        "type": "knowledge_base"
       }
     ]
   }
@@ -69,6 +71,7 @@ X-API-Key: cms_12345
 | `created_at` | `string`  | The timestamp when the knowledge base was created (ISO 8601 format). |
 | `updated_at` | `string`  | The timestamp of the last update to the knowledge base (ISO 8601 format). |
 | `status`     | `string`  | The current status of the knowledge base (`active` for enabled, `inactive` for disabled). |
+| `type`       | `string`  | Type of knowledge base (`system` or `knowledge_base`). |
 
 #### Status Codes
 - `200 OK` - Successful retrieval  
@@ -76,11 +79,56 @@ X-API-Key: cms_12345
 - `403 Forbidden` - Missing or invalid API Key  
 - `500 Internal Server Error` - Server-side error  
 
-
-
-
 ---
-### 2. Update Knowledge Base Details
+### 2. Create Knowledge Base
+**Method:** `POST`
+**Endpoint:** `/folders`
+**Description:** Creates a new knowledge base of type `knowledge_base`. Cannot be used to create a `system` type.
+
+#### Request Body
+```json
+{
+  "name": "New Knowledge Base",
+  "prompt": "Short description or usage hint",
+  "status": "active",
+  "type": "knowledge_base"
+}
+```
+
+#### Request Body Parameters
+| Parameter | Type    | Required | Description |
+|----------|---------|----------|-------------|
+| `name`   | `string` | Yes | The name of the new knowledge base. |
+| `prompt` | `string` | No  | Description or usage hint. |
+| `status` | `string` | No  | Status (`active` or `inactive`). Default: `active`. |
+| `type`   | `string` | Yes | Must be `knowledge_base`. Cannot create `system` type. |
+
+#### Response Example
+```json
+{
+  "status_code": 201,
+  "message": "Knowledge base created successfully.",
+  "folder_id": "789"
+}
+```
+
+#### Response Parameters
+| Parameter     | Type    | Description |
+|---------------|---------|-------------|
+| `status_code` | integer | HTTP status code. |
+| `message`     | string  | Confirmation message. |
+| `folder_id`   | string  | Unique ID of the created knowledge base. |
+
+#### Status Codes
+- `201 Created` - Knowledge base created successfully  
+- `400 Bad Request` - Missing or invalid parameters  
+- `403 Forbidden` - Attempting to create a `system` type  
+- `500 Internal Server Error` - Server-side error  
+---
+
+
+
+### 3. Update Knowledge Base Details
 **Method:** `PUT`  
 **Endpoint:** `/folders/{folder_id}`  
 **Description:** Updates the details of a specific knowledge base, including name, prompt, or status.
@@ -127,48 +175,39 @@ X-API-Key: cms_12345
 - `404 Not Found` - Knowledge base not found  
 - `500 Internal Server Error` - Server-side error  
 
+
+
 ---
 
-
-
-
-### 2. Update Knowledge Base Name
-**Method:** `PUT`  
-**Endpoint:** `/folders/{folder_id}`  
-**Description:** Updates the name of a specific knowledge base.
+### 4. Delete Knowledge Base
+**Method:** `DELETE`
+**Endpoint:** `/folders/{folder_id}`
+**Description:** Deletes a knowledge base of type `knowledge_base`. `system` type cannot be deleted.
 
 #### Request Parameters
 | Parameter   | Type   | Required | Description |
-|------------|--------|----------|-------------|
-| `folder_id` | `string` | Yes | The unique ID of the knowledge base to update. |
-
-#### Request Body
-```json
-{
-  "name": "New_Knowledge_Base_Name"
-}
-```
-| Parameter | Type   | Required | Description |
-|----------|--------|----------|-------------|
-| `name`   | `string` | Yes | The new name of the knowledge base. |
+|-------------|--------|----------|-------------|
+| `folder_id` | string | Yes      | The ID of the knowledge base to delete. |
 
 #### Response Example
 ```json
 {
-  "message": "Knowledge base name updated successfully."
+  "status_code": 200,
+  "message": "Knowledge base deleted successfully."
 }
 ```
 
 #### Status Codes
-- `200 OK` - Successfully updated  
-- `400 Bad Request` - Invalid parameters (e.g., missing `name` or invalid `folder_id`)  
+- `200 OK` - Knowledge base deleted successfully  
+- `400 Bad Request` - Attempting to delete a `system` type  
 - `403 Forbidden` - Missing or invalid API Key  
 - `404 Not Found` - Knowledge base not found  
 - `500 Internal Server Error` - Server-side error  
 
 ---
 
-### 3. Retrieve Files in a Knowledge Base
+
+### 5. Retrieve Files in a Knowledge Base
 **Method:** `GET`  
 **Endpoint:** `/files/folder/{folder_id}`  
 **Description:** Retrieves all files in a specific knowledge base. Supports pagination, sorting, and search.
@@ -240,7 +279,7 @@ X-API-Key: cms_12345
 ---
 
 
-### 4. Batch Check for Duplicate Filenames
+### 6. Batch Check for Duplicate Filenames
 **Method:** `POST`  
 **Endpoint:** `/files/check_duplicates`  
 **Description:** Checks if filenames already exist in a specified knowledge base.
@@ -282,7 +321,7 @@ X-API-Key: cms_12345
 
 
 
-### 5. Batch Upload Files
+### 7. Batch Upload Files
 **Method:** `POST`  
 **Endpoint:** `/upload`  
 **Description:** Uploads multiple files to a specified knowledge base. All files in the batch must be uploaded by the same user and share the same availability period.
@@ -335,7 +374,7 @@ X-API-Key: cms_12345
 ---
 
 
-### 6. Batch Overwrite Existing Files
+### 8. Batch Overwrite Existing Files
 **Method:** `PUT`  
 **Endpoint:** `/files`  
 **Description:** Overwrites existing files in a specified knowledge base. All files in the batch must be updated by the same user. The availability period (`start_at`, `end_at`) of the original file remains unchanged.
@@ -384,7 +423,7 @@ X-API-Key: cms_12345
 
 ---
 
-### 7. Batch Delete Files
+### 9. Batch Delete Files
 **Method:** `DELETE`  
 **Endpoint:** `/files`  
 **Description:** Deletes multiple files from a knowledge base.
@@ -427,7 +466,7 @@ X-API-Key: cms_12345
 
 
 
-### 8. Modify File Lifecycle
+### 10. Modify File Lifecycle
 **Method:** `PUT`  
 **Endpoint:** `/files/{file_id}/lifecycle`  
 **Description:** Modifies the start and end time of a file. If `start_at` is `null` or not provided, the file becomes active immediately. If `end_at` is `null` or not provided, the file remains active indefinitely.
