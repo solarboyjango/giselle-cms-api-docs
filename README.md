@@ -1,7 +1,7 @@
 # Giselle-cms-api-docs
 
 ## Overview
-This document provides an overview of the API endpoints available for managing knowledge base documents in the backend service. The API is designed based on the Retrieval-Augmented Generation (RAG) framework to support document retrieval and response generation.
+This document provides an overview of the API endpoints available for managing Folder documents in the backend service. The API is designed based on the Retrieval-Augmented Generation (RAG) framework to support document retrieval and response generation.
 
 ## Authentication & Authorization
 - **Authentication Method**: API Key
@@ -16,15 +16,15 @@ X-API-Key: cms_12345
 
 ## API Endpoints
 
-### 1. Retrieve Knowledge Bases
+### 1. Retrieve Folders
 **Method:** `GET`  
 **Endpoint:** `/folders`  
-**Description:** Retrieves a list of available knowledge bases. Supports sorting and searching.
+**Description:** Retrieves a list of available Folders. Supports sorting and searching.
 
 #### Request Parameters
 | Parameter   | Type    | Required | Description |
 |------------|---------|----------|-------------|
-| `query`      | `string`  | No | Search keyword to filter knowledge bases by name or prompt. |
+| `query`      | `string`  | No | Search keyword to filter Folders by name or prompt. |
 | `sort_by`    | `string`  | No | Field to sort by (e.g., `name`, `created_at`). Default: `name`. |
 | `sort_order` | `string`  | No | Sorting order (`asc` for ascending, `desc` for descending). Default: `asc`. |
 
@@ -32,7 +32,7 @@ X-API-Key: cms_12345
 ```json
 {
   "status_code": 200,
-  "message": "Knowledge bases retrieved successfully.",
+  "message": "Folders retrieved successfully.",
   "data": {
     "folders": [
       {
@@ -63,15 +63,14 @@ X-API-Key: cms_12345
 |------------|---------|-------------|
 | `status_code` | `integer` | HTTP status code of the response. |
 | `message`    | `string`  | A confirmation message indicating success. |
-| `data`       | `object`  | The response data containing the list of knowledge bases. |
-| `folders`    | `array`   | A list of available knowledge bases. |
-| `folder_id`  | `string`  | The unique ID of the knowledge base. |
-| `name`       | `string`  | The name of the knowledge base. |
-| `prompt`     | `string`  | A short description or recommended usage for the knowledge base. |
-| `created_at` | `string`  | The timestamp when the knowledge base was created (ISO 8601 format). |
-| `updated_at` | `string`  | The timestamp of the last update to the knowledge base (ISO 8601 format). |
-| `status`     | `string`  | The current status of the knowledge base (`active` for enabled, `inactive` for disabled). |
-| `type`       | `string`  | Type of knowledge base (`system` or `knowledge_base`). |
+| `folders`    | `array`   | A list of available Folders. |
+| `folder_id`  | `string`  | The unique ID of the Folder. |
+| `name`       | `string`  | The name of the Folder. |
+| `prompt`     | `string`  | A short description or recommended usage for the Folder. |
+| `created_at` | `string`  | The timestamp when the Folder was created (ISO 8601 format). |
+| `updated_at` | `string`  | The timestamp of the last update to the Folder (ISO 8601 format). |
+| `status`     | `string`  | The current status of the Folder (`active` for enabled, `inactive` for disabled). |
+| `type`       | `string`  | Type of Folder (`system` or `knowledge_base`). |
 
 #### Status Codes
 - `200 OK` - Successful retrieval  
@@ -80,15 +79,15 @@ X-API-Key: cms_12345
 - `500 Internal Server Error` - Server-side error  
 
 ---
-### 2. Create Knowledge Base
+### 2. Create Folder
 **Method:** `POST`
 **Endpoint:** `/folders`
-**Description:** Creates a new knowledge base of type `knowledge_base`. Cannot be used to create a `system` type.
+**Description:** Creates a new Folder of type `knowledge_base`. Cannot be used to create a `system` type.
 
 #### Request Body
 ```json
 {
-  "name": "New Knowledge Base",
+  "name": "New Folder",
   "prompt": "Short description or usage hint",
   "status": "active",
   "type": "knowledge_base"
@@ -98,7 +97,7 @@ X-API-Key: cms_12345
 #### Request Body Parameters
 | Parameter | Type    | Required | Description |
 |----------|---------|----------|-------------|
-| `name`   | `string` | Yes | The name of the new knowledge base. |
+| `name`   | `string` | Yes | The name of the new Folder. |
 | `prompt` | `string` | No  | Description or usage hint. |
 | `status` | `string` | No  | Status (`active` or `inactive`). Default: `active`. |
 | `type`   | `string` | Yes | Must be `knowledge_base`. Cannot create `system` type. |
@@ -107,7 +106,7 @@ X-API-Key: cms_12345
 ```json
 {
   "status_code": 201,
-  "message": "Knowledge base created successfully.",
+  "message": "Folder created successfully.",
   "folder_id": "789"
 }
 ```
@@ -117,10 +116,10 @@ X-API-Key: cms_12345
 |---------------|---------|-------------|
 | `status_code` | integer | HTTP status code. |
 | `message`     | string  | Confirmation message. |
-| `folder_id`   | string  | Unique ID of the created knowledge base. |
+| `folder_id`   | string  | Unique ID of the created Folder. |
 
 #### Status Codes
-- `201 Created` - Knowledge base created successfully  
+- `201 Created` - Folder created successfully  
 - `400 Bad Request` - Missing or invalid parameters  
 - `403 Forbidden` - Attempting to create a `system` type  
 - `500 Internal Server Error` - Server-side error  
@@ -128,20 +127,20 @@ X-API-Key: cms_12345
 
 
 
-### 3. Update Knowledge Base Details
+### 3. Update Folder Details
 **Method:** `PUT`  
 **Endpoint:** `/folders/{folder_id}`  
-**Description:** Updates the details of a specific knowledge base, including name, prompt, or status.
+**Description:** Updates the details of a specific Folder, including name, prompt, or status.
 
 #### Request Parameters
 | Parameter   | Type    | Required | Description |
 |------------|---------|----------|-------------|
-| `folder_id`  | `string`  | Yes | The unique ID of the knowledge base to update. |
+| `folder_id`  | `string`  | Yes | The unique ID of the Folder to update. |
 
 #### Request Body
 ```json
 {
-  "name": "Updated Knowledge Base Name",
+  "name": "Updated Folder Name",
   "prompt": "Updated prompt description",
   "status": "active"
 }
@@ -150,15 +149,15 @@ X-API-Key: cms_12345
 #### Request Body Parameters
 | Parameter | Type    | Required | Description |
 |----------|---------|----------|-------------|
-| `name`   | `string` | No | The new name of the knowledge base. |
-| `prompt` | `string` | No | The new description or recommended usage of the knowledge base. |
-| `status` | `string` | No | The status of the knowledge base (`active` for enabled, `inactive` for disabled). |
+| `name`   | `string` | No | The new name of the Folder. |
+| `prompt` | `string` | No | The new description or recommended usage of the Folder. |
+| `status` | `string` | No | The status of the Folder (`active` for enabled, `inactive` for disabled). |
 
 #### Response Example
 ```json
 {
   "status_code": 200,
-  "message": "Knowledge base details updated successfully."
+  "message": "Folder details updated successfully."
 }
 ```
 
@@ -172,50 +171,50 @@ X-API-Key: cms_12345
 - `200 OK` - Successfully updated  
 - `400 Bad Request` - Invalid parameters (e.g., incorrect `status` value)  
 - `403 Forbidden` - Missing or invalid API Key  
-- `404 Not Found` - Knowledge base not found  
+- `404 Not Found` - Folder not found  
 - `500 Internal Server Error` - Server-side error  
 
 
 
 ---
 
-### 4. Delete Knowledge Base
+### 4. Delete Folder
 **Method:** `DELETE`
 **Endpoint:** `/folders/{folder_id}`
-**Description:** Deletes a knowledge base of type `knowledge_base`. `system` type cannot be deleted.
+**Description:** Deletes a Folder of type `knowledge_base`. `system` type cannot be deleted.
 
 #### Request Parameters
 | Parameter   | Type   | Required | Description |
 |-------------|--------|----------|-------------|
-| `folder_id` | string | Yes      | The ID of the knowledge base to delete. |
+| `folder_id` | string | Yes      | The ID of the Folder to delete. |
 
 #### Response Example
 ```json
 {
   "status_code": 200,
-  "message": "Knowledge base deleted successfully."
+  "message": "Folder deleted successfully."
 }
 ```
 
 #### Status Codes
-- `200 OK` - Knowledge base deleted successfully  
+- `200 OK` - Folder deleted successfully  
 - `400 Bad Request` - Attempting to delete a `system` type  
 - `403 Forbidden` - Missing or invalid API Key  
-- `404 Not Found` - Knowledge base not found  
+- `404 Not Found` - Folder not found  
 - `500 Internal Server Error` - Server-side error  
 
 ---
 
 
-### 5. Retrieve Files in a Knowledge Base
+### 5. Retrieve Files in a Folder
 **Method:** `GET`  
 **Endpoint:** `/files/folder/{folder_id}`  
-**Description:** Retrieves all files in a specific knowledge base. Supports pagination, sorting, and search.
+**Description:** Retrieves all files in a specific Folder. Supports pagination, sorting, and search.
 
 #### Request Parameters
 | Parameter   | Type    | Required | Description |
 |------------|---------|----------|-------------|
-| `folder_id`  | `string`  | Yes | The unique ID of the knowledge base. |
+| `folder_id`  | `string`  | Yes | The unique ID of the Folder. |
 | `page`       | `integer` | No | The page number. Default: `1`. |
 | `page_size`  | `integer` | No | Number of items per page. Default: `10`. |
 | `query`      | `string`  | No | Search keyword to filter file names. |
@@ -259,7 +258,7 @@ X-API-Key: cms_12345
 | `total_count` | `integer` | Total number of files matching the query. |
 | `page`        | `integer` | Current page number. |
 | `page_size`   | `integer` | Number of files returned per page. |
-| `files`       | `array`   | List of files in the specified knowledge base. |
+| `files`       | `array`   | List of files in the specified Folder. |
 | `file_id`     | `string`  | The unique ID of the file. |
 | `name`    | `string`  | The name of the file. |
 | `url`    | `string`  | The downloading url of the file. |
@@ -273,7 +272,7 @@ X-API-Key: cms_12345
 - `200 OK` - Successful retrieval  
 - `400 Bad Request` - Invalid parameters (e.g., incorrect `folder_id`, invalid `page` value)  
 - `403 Forbidden` - Missing or invalid API Key  
-- `404 Not Found` - Knowledge base not found  
+- `404 Not Found` - Folder not found  
 - `500 Internal Server Error` - Server-side error  
 
 ---
@@ -282,12 +281,12 @@ X-API-Key: cms_12345
 ### 6. Batch Check for Duplicate Filenames
 **Method:** `POST`  
 **Endpoint:** `/files/check_duplicates`  
-**Description:** Checks if filenames already exist in a specified knowledge base.
+**Description:** Checks if filenames already exist in a specified Folder.
 
 #### Request Parameters
 | Parameter   | Type    | Required | Description |
 |------------|---------|----------|-------------|
-| `folder_id`  | `string`  | Yes | The unique ID of the knowledge base. |
+| `folder_id`  | `string`  | Yes | The unique ID of the Folder. |
 | `names`  | `array`   | Yes | A list of filenames to check for duplicates. |
 
 #### Request Body
@@ -308,13 +307,13 @@ X-API-Key: cms_12345
 #### Response Parameters
 | Parameter   | Type    | Description |
 |------------|---------|-------------|
-| `duplicates` | `array`  | A list of filenames that already exist in the specified knowledge base. |
+| `duplicates` | `array`  | A list of filenames that already exist in the specified Folder. |
 
 #### Status Codes
 - `200 OK` - Successful check  
 - `400 Bad Request` - Invalid parameters (e.g., missing `folder_id`, empty `names` list)  
 - `403 Forbidden` - Missing or invalid API Key  
-- `404 Not Found` - Knowledge base not found  
+- `404 Not Found` - Folder not found  
 - `500 Internal Server Error` - Server-side error  
 
 ---
@@ -324,12 +323,12 @@ X-API-Key: cms_12345
 ### 7. Batch Upload Files
 **Method:** `POST`  
 **Endpoint:** `/upload`  
-**Description:** Uploads multiple files to a specified knowledge base. All files in the batch must be uploaded by the same user and share the same availability period.
+**Description:** Uploads multiple files to a specified Folder. All files in the batch must be uploaded by the same user and share the same availability period.
 
 #### Request Parameters
 | Parameter   | Type    | Required | Description |
 |------------|---------|----------|-------------|
-| `folder_id`  | `string`  | Yes | The unique ID of the knowledge base. |
+| `folder_id`  | `string`  | Yes | The unique ID of the Folder. |
 | `uploader`   | `string`  | Yes | The email or username of the user uploading the files. |
 | `start_at`   | `string`  | Yes | The start date of the file's availability (ISO 8601). If `null`, the file is available immediately. |
 | `end_at`     | `string`  | Yes | The end date of the file's availability (ISO 8601). If `null`, the file remains available indefinitely. |
@@ -377,12 +376,12 @@ X-API-Key: cms_12345
 ### 8. Batch Overwrite Existing Files
 **Method:** `PUT`  
 **Endpoint:** `/files`  
-**Description:** Overwrites existing files in a specified knowledge base. All files in the batch must be updated by the same user. The availability period (`start_at`, `end_at`) of the original file remains unchanged.
+**Description:** Overwrites existing files in a specified Folder. All files in the batch must be updated by the same user. The availability period (`start_at`, `end_at`) of the original file remains unchanged.
 
 #### Request Parameters
 | Parameter   | Type    | Required | Description |
 |------------|---------|----------|-------------|
-| `folder_id`  | `string`  | Yes | The unique ID of the knowledge base. |
+| `folder_id`  | `string`  | Yes | The unique ID of the Folder. |
 | `uploader`   | `string`  | Yes | The email or username of the user overwriting the files. |
 | `files`      | `array`   | Yes | A list of files to be overwritten. |
 | `name`   | `string`  | Yes | The name of the file being overwritten. |
@@ -417,7 +416,7 @@ X-API-Key: cms_12345
 - `200 OK` - Files successfully overwritten  
 - `400 Bad Request` - Invalid parameters (e.g., missing `folder_id`, empty `files` list, or non-existent file)  
 - `403 Forbidden` - Missing or invalid API Key  
-- `404 Not Found` - Knowledge base or file not found  
+- `404 Not Found` - Folder or file not found  
 - `500 Internal Server Error` - Server-side error  
 
 
@@ -426,12 +425,12 @@ X-API-Key: cms_12345
 ### 9. Batch Delete Files
 **Method:** `DELETE`  
 **Endpoint:** `/files`  
-**Description:** Deletes multiple files from a knowledge base.
+**Description:** Deletes multiple files from a Folder.
 
 #### Request Parameters
 | Parameter   | Type    | Required | Description |
 |------------|---------|----------|-------------|
-| `folder_id`  | `string`  | Yes | The unique ID of the knowledge base. |
+| `folder_id`  | `string`  | Yes | The unique ID of the Folder. |
 | `file_ids`   | `array`   | Yes | A list of file IDs to be deleted. |
 
 #### Request Body
@@ -460,7 +459,7 @@ X-API-Key: cms_12345
 - `200 OK` - Files successfully deleted  
 - `400 Bad Request` - Invalid parameters (e.g., missing `folder_id`, empty `file_ids` list, or non-existent file)  
 - `403 Forbidden` - Missing or invalid API Key  
-- `404 Not Found` - Knowledge base or file not found  
+- `404 Not Found` - Folder or file not found  
 - `500 Internal Server Error` - Server-side error  
 
 
@@ -521,7 +520,7 @@ X-API-Key: cms_12345
 ### Use Case 1: Retrieving a List of Available Knowledge Bases
 A developer wants to retrieve all available knowledge bases in the system to allow users to select from them.
 
-### Use Case 2: Uploading a Document to a Knowledge Base
-A user wants to upload a new document to an existing knowledge base.
+### Use Case 2: Uploading a Document to a Folder
+A user wants to upload a new document to an existing Folder.
 
 
