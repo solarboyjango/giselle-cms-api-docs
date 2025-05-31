@@ -70,7 +70,7 @@ X-API-Key: cms_12345
 | `created_at` | `string`  | The timestamp when the Folder was created (ISO 8601 format). |
 | `updated_at` | `string`  | The timestamp of the last update to the Folder (ISO 8601 format). |
 | `status`     | `string`  | The current status of the Folder (`active` for enabled, `inactive` for disabled). |
-| `type`       | `string`  | Type of Folder (`system` or `knowledge_base`). |
+| `type`       | `string`  | Type of Folder (`knowledge_base`). |
 
 #### Status Codes
 - `200 OK` - Successful retrieval  
