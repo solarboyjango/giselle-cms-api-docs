@@ -525,7 +525,80 @@ curl -X PUT https://api.example.com/files \
 
 ---
 
+### 11. Retrieve System Prompt
+**Method:** `GET`  
+**Endpoint:** `/system/prompt`  
+**Description:** Retrieves the system prompt configuration. This endpoint specifically targets the system type prompt which is unique in the system.
 
+#### Response Example
+```json
+{
+  "code": 200,
+  "msg": "System prompt retrieved successfully.",
+  "data": {
+    "prompt": "System-wide configuration and settings",
+    "created_at": "2024-01-01T00:00:00Z",
+    "updated_at": "2024-02-25T10:00:00Z",
+  }
+}
+```
+
+#### Response Parameters
+| Parameter   | Type    | Description |
+|------------|---------|-------------|
+| `code` | `integer` | HTTP status code of the response. |
+| `msg`    | `string`  | A confirmation message indicating success. |
+| `data`    | `object`  | The system prompt configuration. |
+| `prompt`     | `string`  | The system prompt content. |
+| `created_at` | `string`  | The timestamp when the system prompt was created (ISO 8601 format). |
+| `updated_at` | `string`  | The timestamp of the last update (ISO 8601 format). |
+
+
+#### Status Codes
+- `200 OK` - Successful retrieval  
+- `403 Forbidden` - Missing or invalid API Key  
+- `500 Internal Server Error` - Server-side error  
+
+---
+
+### 12. Update System Prompt
+**Method:** `PUT`  
+**Endpoint:** `/system/prompt`  
+**Description:** Updates the system prompt configuration. This endpoint can only modify the existing system prompt, as the system prompt is unique and cannot be created or deleted.
+
+#### Request Body
+```json
+{
+  "prompt": "Updated system-wide configuration and settings"
+}
+```
+
+#### Request Body Parameters
+| Parameter | Type    | Required | Description |
+|----------|---------|----------|-------------|
+| `prompt` | `string` | No | The new system prompt content. |
+
+#### Response Example
+```json
+{
+  "code": 200,
+  "msg": "System prompt updated successfully."
+}
+```
+
+#### Response Parameters
+| Parameter   | Type    | Description |
+|------------|---------|-------------|
+| `code` | `integer` | HTTP status code of the response. |
+| `msg`    | `string`  | A confirmation message indicating success. |
+
+#### Status Codes
+- `200 OK` - Successfully updated  
+- `400 Bad Request` - Invalid parameters 
+- `403 Forbidden` - Missing or invalid API Key  
+- `500 Internal Server Error` - Server-side error  
+
+---
 
 ## Error Handling
 | Error Code | Description |
