@@ -31,7 +31,7 @@ X-API-Key: cms_12345
 #### Response Example
 ```json
 {
-  "status_code": 200,
+  "code": 200,
   "message": "Folders retrieved successfully.",
   "data": {
     "folders": [
@@ -61,7 +61,7 @@ X-API-Key: cms_12345
 #### Response Parameters
 | Parameter   | Type    | Description |
 |------------|---------|-------------|
-| `status_code` | `integer` | HTTP status code of the response. |
+| `code` | `integer` | HTTP status code of the response. |
 | `message`    | `string`  | A confirmation message indicating success. |
 | `folders`    | `array`   | A list of available Folders. |
 | `folder_id`  | `string`  | The unique ID of the Folder. |
@@ -105,7 +105,7 @@ X-API-Key: cms_12345
 #### Response Example
 ```json
 {
-  "status_code": 200,
+  "code": 200,
   "message": "Folder created successfully.",
   "folder_id": "789"
 }
@@ -114,7 +114,7 @@ X-API-Key: cms_12345
 #### Response Parameters
 | Parameter     | Type    | Description |
 |---------------|---------|-------------|
-| `status_code` | integer | HTTP status code. |
+| `code` | integer | HTTP status code. |
 | `message`     | string  | Confirmation message. |
 | `folder_id`   | string  | Unique ID of the created Folder. |
 
@@ -156,7 +156,7 @@ X-API-Key: cms_12345
 #### Response Example
 ```json
 {
-  "status_code": 200,
+  "code": 200,
   "message": "Folder details updated successfully."
 }
 ```
@@ -164,7 +164,7 @@ X-API-Key: cms_12345
 #### Response Parameters
 | Parameter   | Type    | Description |
 |------------|---------|-------------|
-| `status_code` | `integer` | HTTP status code of the response. |
+| `code` | `integer` | HTTP status code of the response. |
 | `message`    | `string`  | A confirmation message indicating success. |
 
 #### Status Codes
@@ -191,7 +191,7 @@ X-API-Key: cms_12345
 #### Response Example
 ```json
 {
-  "status_code": 200,
+  "code": 200,
   "message": "Folder deleted successfully."
 }
 ```
