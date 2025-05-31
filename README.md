@@ -32,7 +32,7 @@ X-API-Key: cms_12345
 ```json
 {
   "code": 200,
-  "message": "Folders retrieved successfully.",
+  "msg": "Folders retrieved successfully.",
   "data": {
     "folders": [
       {
@@ -62,7 +62,7 @@ X-API-Key: cms_12345
 | Parameter   | Type    | Description |
 |------------|---------|-------------|
 | `code` | `integer` | HTTP status code of the response. |
-| `message`    | `string`  | A confirmation message indicating success. |
+| `msg`    | `string`  | A confirmation message indicating success. |
 | `folders`    | `array`   | A list of available Folders. |
 | `folder_id`  | `string`  | The unique ID of the Folder. |
 | `name`       | `string`  | The name of the Folder. |
@@ -106,7 +106,7 @@ X-API-Key: cms_12345
 ```json
 {
   "code": 200,
-  "message": "Folder created successfully.",
+  "msg": "Folder created successfully.",
   "folder_id": "789"
 }
 ```
@@ -115,7 +115,7 @@ X-API-Key: cms_12345
 | Parameter     | Type    | Description |
 |---------------|---------|-------------|
 | `code` | integer | HTTP status code. |
-| `message`     | string  | Confirmation message. |
+| `msg`     | string  | Confirmation message. |
 | `folder_id`   | string  | Unique ID of the created Folder. |
 
 #### Status Codes
@@ -157,7 +157,7 @@ X-API-Key: cms_12345
 ```json
 {
   "code": 200,
-  "message": "Folder details updated successfully."
+  "msg": "Folder details updated successfully."
 }
 ```
 
@@ -165,7 +165,7 @@ X-API-Key: cms_12345
 | Parameter   | Type    | Description |
 |------------|---------|-------------|
 | `code` | `integer` | HTTP status code of the response. |
-| `message`    | `string`  | A confirmation message indicating success. |
+| `msg`    | `string`  | A confirmation message indicating success. |
 
 #### Status Codes
 - `200 OK` - Successfully updated  
@@ -192,7 +192,7 @@ X-API-Key: cms_12345
 ```json
 {
   "code": 200,
-  "message": "Folder deleted successfully."
+  "msg": "Folder deleted successfully."
 }
 ```
 
@@ -365,7 +365,7 @@ curl -X POST https://api.example.com/upload \
 ```json
 {
   "uploaded": ["report.docx", "summary.pdf"],
-  "message": "Files uploaded successfully."
+  "msg": "Files uploaded successfully."
 }
 ```
 
@@ -374,7 +374,7 @@ curl -X POST https://api.example.com/upload \
 | Parameter  | Type     | Description                                          |
 | ---------- | -------- | ---------------------------------------------------- |
 | `uploaded` | `array`  | A list of filenames that were successfully uploaded. |
-| `message`  | `string` | A confirmation message indicating success.           |
+| `msg`  | `string` | A confirmation message indicating success.           |
 
 #### Status Codes
 
@@ -419,7 +419,7 @@ curl -X PUT https://api.example.com/files \
 ```json
 {
   "overwritten": ["report.docx"],
-  "message": "Files overwritten successfully."
+  "msg": "Files overwritten successfully."
 }
 ```
 
@@ -428,7 +428,7 @@ curl -X PUT https://api.example.com/files \
 | Parameter     | Type     | Description                                             |
 | ------------- | -------- | ------------------------------------------------------- |
 | `overwritten` | `array`  | A list of filenames that were successfully overwritten. |
-| `message`     | `string` | A confirmation message indicating success.              |
+| `msg`     | `string` | A confirmation message indicating success.              |
 
 #### Status Codes
 
@@ -464,7 +464,7 @@ curl -X PUT https://api.example.com/files \
 ```json
 {
   "deleted": ["A1B2", "C3D4"],
-  "message": "Files deleted successfully."
+  "msg": "Files deleted successfully."
 }
 ```
 
@@ -472,7 +472,7 @@ curl -X PUT https://api.example.com/files \
 | Parameter   | Type    | Description |
 |------------|---------|-------------|
 | `deleted`   | `array`  | A list of file IDs that were successfully deleted. |
-| `message`   | `string` | A confirmation message indicating success. |
+| `msg`   | `string` | A confirmation message indicating success. |
 
 #### Status Codes
 - `200 OK` - Files successfully deleted  
@@ -507,14 +507,14 @@ curl -X PUT https://api.example.com/files \
 #### Response Example
 ```json
 {
-  "message": "File lifecycle updated successfully."
+  "msg": "File lifecycle updated successfully."
 }
 ```
 
 #### Response Parameters
 | Parameter   | Type    | Description |
 |------------|---------|-------------|
-| `message`   | `string` | A confirmation message indicating success. |
+| `msg`   | `string` | A confirmation message indicating success. |
 
 #### Status Codes
 - `200 OK` - Successfully updated  
