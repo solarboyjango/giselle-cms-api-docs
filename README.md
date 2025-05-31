@@ -105,7 +105,7 @@ X-API-Key: cms_12345
 #### Response Example
 ```json
 {
-  "status_code": 201,
+  "status_code": 200,
   "message": "Folder created successfully.",
   "folder_id": "789"
 }
@@ -119,7 +119,7 @@ X-API-Key: cms_12345
 | `folder_id`   | string  | Unique ID of the created Folder. |
 
 #### Status Codes
-- `201 Created` - Folder created successfully  
+- `200 Created` - Folder created successfully  
 - `400 Bad Request` - Missing or invalid parameters  
 - `403 Forbidden` - Attempting to create a `system` type  
 - `500 Internal Server Error` - Server-side error  
@@ -378,7 +378,7 @@ curl -X POST https://api.example.com/upload \
 
 #### Status Codes
 
-* `201 Created` - Files successfully uploaded
+* `200 Created` - Files successfully uploaded
 * `400 Bad Request` - Invalid parameters (e.g., missing `folder_id`, empty `files` list, or incorrect `start_at`/`end_at` format)
 * `403 Forbidden` - Missing or invalid API Key
 * `500 Internal Server Error` - Server-side error
