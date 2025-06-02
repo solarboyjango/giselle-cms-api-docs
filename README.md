@@ -14,6 +14,13 @@ GET /secure-endpoint
 X-API-Key: cms_12345
 ```
 
+## Time Format
+All timestamps in the API responses are in UTC (Coordinated Universal Time) and follow the ISO 8601 format:
+- Format: `YYYY-MM-DDThh:mm:ss.sssZ`
+- Example: `2024-03-14T10:30:00.000Z`
+- The `Z` suffix indicates UTC timezone
+- Frontend applications should convert these timestamps to local timezone for display
+
 ## API Endpoints
 
 ### 1. Retrieve Folders
