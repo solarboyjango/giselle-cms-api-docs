@@ -21,6 +21,27 @@ All timestamps in the API responses are in UTC (Coordinated Universal Time) and 
 - The `Z` suffix indicates UTC timezone
 - Frontend applications should convert these timestamps to local timezone for display
 
+For API requests, the following date formats are supported:
+1. Simple date format: `YYYY-MM-DD`
+   - Example: `2025-03-01`
+   - When using this format, the time will be set to 00:00:00 UTC of the specified date
+
+2. ISO 8601 format: `YYYY-MM-DDThh:mm:ssZ`
+   - Example: `2025-03-01T00:00:00Z`
+   - The `Z` suffix indicates UTC timezone
+   - You can also use `+00:00` instead of `Z` (e.g., `2025-03-01T00:00:00+00:00`)
+
+Example API requests with different date formats:
+```bash
+# Using simple date format
+curl 'https://api.example.com/files/folder/123?start_at_before=2025-06-01&end_at_after=2025-03-01' \
+  -H 'X-API-Key: cms_12345'
+
+# Using ISO 8601 format
+curl 'https://api.example.com/files/folder/123?start_at_before=2025-06-01T00:00:00Z&end_at_after=2025-03-01T00:00:00Z' \
+  -H 'X-API-Key: cms_12345'
+```
+
 ## API Endpoints
 
 ### 1. Retrieve Folders
@@ -31,11 +52,17 @@ All timestamps in the API responses are in UTC (Coordinated Universal Time) and 
 #### Request Parameters
 | Parameter   | Type    | Required | Description |
 |------------|---------|----------|-------------|
-| `query`      | `string`  | No | Search keyword to filter Folders by name or prompt. |
-| `sort_by`    | `string`  | No | Field to sort by (e.g., `name`, `created_at`). Default: `name`. |
-| `sort_order` | `string`  | No | Sorting order (`asc` for ascending, `desc` for descending). Default: `asc`. |
+| `{field}`    | `string`  | No | Search by field value. Available fields: `name`, `prompt`, `status`, `type`, `folder_id`. Example: `name=知識庫6` or `status=active`. |
+| `sort_field` | `string`  | No | Field to sort by (e.g., `name`, `created_at`). Default: `name`. |
+| `sort_order` | `string`  | No | Sorting order (`ascend` or `descend`). Default: `ascend`. |
 | `page`       | `integer` | No | The page number. Default: `1`. |
 | `page_size`  | `integer` | No | Number of items per page. Default: `10`. |
+
+#### Example Request
+```bash
+curl 'https://api.example.com/folders?name=知識庫6&page=1&page_size=10&sort_field=name&sort_order=descend' \
+  -H 'X-API-Key: cms_12345'
+```
 
 #### Response Example
 ```json
@@ -90,7 +117,7 @@ All timestamps in the API responses are in UTC (Coordinated Universal Time) and 
 
 #### Status Codes
 - `200 OK` - Successful retrieval  
-- `400 Bad Request` - Invalid parameters (e.g., incorrect `sort_by` field)  
+- `400 Bad Request` - Invalid parameters (e.g., incorrect `sort_field` or `sort_order`)  
 - `403 Forbidden` - Missing or invalid API Key  
 - `500 Internal Server Error` - Server-side error  
 
@@ -115,7 +142,7 @@ All timestamps in the API responses are in UTC (Coordinated Universal Time) and 
 |----------|---------|----------|-------------|
 | `name`   | `string` | Yes | The name of the new Folder. |
 | `prompt` | `string` | No  | Description or usage hint. |
-| `status` | `string` | No  | Status (`active` or `inactive`). Default: `active`. |
+| `status` | `string` | No  | Status (`active` or `inactive`). Default: `inactive`. |
 | `type`   | `string` | Yes | Must be `knowledge_base`. Cannot create `system` type. |
 
 #### Response Example
@@ -230,11 +257,32 @@ All timestamps in the API responses are in UTC (Coordinated Universal Time) and 
 | Parameter   | Type    | Required | Description |
 |------------|---------|----------|-------------|
 | `folder_id`  | `string`  | Yes | The unique ID of the Folder. |
+| `{field}`    | `string`  | No | Search by field value. Available fields: `name`, `uploader`, `status`. Example: `name=policy.docx` or `status=processing`. |
+| `start_at_after` | `string` | No | Filter files with start_at after this date (ISO 8601 format). Example: `2024-01-01T00:00:00Z`. |
+| `start_at_before` | `string` | No | Filter files with start_at before this date (ISO 8601 format). Example: `2024-12-31T23:59:59Z`. |
+| `end_at_after` | `string` | No | Filter files with end_at after this date (ISO 8601 format). Example: `2024-01-01T00:00:00Z`. |
+| `end_at_before` | `string` | No | Filter files with end_at before this date (ISO 8601 format). Example: `2024-12-31T23:59:59Z`. |
+| `sort_field` | `string`  | No | Field to sort by (e.g., `name`, `created_at`). Default: `name`. |
+| `sort_order` | `string`  | No | Sorting order (`ascend` or `descend`). Default: `ascend`. |
 | `page`       | `integer` | No | The page number. Default: `1`. |
 | `page_size`  | `integer` | No | Number of items per page. Default: `10`. |
-| `query`      | `string`  | No | Search keyword to filter file names. |
-| `sort_by`    | `string`  | No | Field to sort by (e.g., `name`, `created_at`). Default: `name`. |
-| `sort_order` | `string`  | No | Sorting order (`asc` for ascending, `desc` for descending). Default: `asc`. |
+
+#### Example Request
+```bash
+# Search by name and status
+curl 'https://api.example.com/files/folder/123?name=policy.docx&status=processing&page=1&page_size=10' \
+  -H 'X-API-Key: cms_12345'
+
+# Search by time range
+curl 'https://api.example.com/files/folder/123?start_at_after=2024-01-01T00:00:00Z&start_at_before=2024-12-31T23:59:59Z&page=1&page_size=10' \
+  -H 'X-API-Key: cms_12345'
+```
+
+#### Notes
+- `folder_id` is not searchable as it is already specified in the URL path
+- `file_id` is not searchable as it is a system-generated unique identifier. To retrieve a specific file, use the dedicated endpoint `/files/{file_id}`
+- Time range search can be used to find files that are active during a specific period
+- All timestamps should be in ISO 8601 format with UTC timezone
 
 #### Response Example
 ```json
@@ -254,7 +302,8 @@ All timestamps in the API responses are in UTC (Coordinated Universal Time) and 
         "start_at": "2024-03-01T00:00:00Z",
         "end_at": "2024-06-01T00:00:00Z",
         "created_at": "2024-02-20T12:34:56Z",
-        "updated_at": "2024-02-25T10:00:00Z"
+        "updated_at": "2024-02-25T10:00:00Z",
+        "status": "success"
       }
     ]
   }
@@ -271,6 +320,15 @@ All timestamps in the API responses are in UTC (Coordinated Universal Time) and 
 | `total_count` | `integer` | Total number of files matching the query. |
 | `data`    | `object`  | Response data. |
 | `files`       | `array`   | List of files in the specified Folder. |
+| `file_id`     | `string`  | Unique identifier of the file. |
+| `name`        | `string`  | Name of the file. |
+| `url`         | `string`  | Temporary access URL for the file. |
+| `uploader`    | `string`  | Email or username of the user who uploaded the file. |
+| `start_at`    | `string`  | Start date of file availability (ISO 8601 format). |
+| `end_at`      | `string`  | End date of file availability (ISO 8601 format). |
+| `created_at`  | `string`  | Timestamp when the file was created (ISO 8601 format). |
+| `updated_at`  | `string`  | Timestamp of the last update (ISO 8601 format). |
+| `status`      | `string`  | Current status of the file (`processing`, `success` or `failed`). |
 
 #### Status Codes
 - `200 OK` - Successful retrieval  
@@ -341,9 +399,33 @@ All timestamps in the API responses are in UTC (Coordinated Universal Time) and 
 | ----------- | -------- | -------- | -------------|
 | `folder_id` | `string` | Yes      | The unique ID of the Folder. |
 | `uploader`  | `string` | Yes      | The email or username of the user uploading the files. |
-| `start_at`  | `string` | Yes      | The start date of the file's availability (`YYYY-MM-DD`). If null, the file is available immediately. |
-| `end_at`    | `string` | Yes      | The end date of the file's availability (`YYYY-MM-DD`). If `null`, the file remains available indefinitely. |
+| `start_at`  | `string` | Yes      | The start date of the file's availability. Supports both YYYY-MM-DD and ISO 8601 formats. If null, the file is available immediately. |
+| `end_at`    | `string` | Yes      | The end date of the file's availability. Supports both YYYY-MM-DD and ISO 8601 formats. If `null`, the file remains available indefinitely. |
+| `status`    | `string` | No       | The initial status of the files (`processing`, `success`, or `failed`). Default: `processing`. |
 | `files`     | `file[]` | Yes      | A list of files to be uploaded. Multiple files should be submitted using the same key name.   |
+
+#### Example Request
+```bash
+# Using simple date format
+curl -X POST 'https://api.example.com/upload' \
+  -H 'X-API-Key: cms_12345' \
+  -F 'folder_id=123' \
+  -F 'uploader=user@example.com' \
+  -F 'start_at=2025-03-01' \
+  -F 'end_at=2025-06-01' \
+  -F 'files=@file1.pdf' \
+  -F 'files=@file2.pdf'
+
+# Using ISO 8601 format
+curl -X POST 'https://api.example.com/upload' \
+  -H 'X-API-Key: cms_12345' \
+  -F 'folder_id=123' \
+  -F 'uploader=user@example.com' \
+  -F 'start_at=2025-03-01T00:00:00Z' \
+  -F 'end_at=2025-06-01T00:00:00Z' \
+  -F 'files=@file1.pdf' \
+  -F 'files=@file2.pdf'
+```
 
 #### Response Example
 ```json
@@ -387,8 +469,32 @@ All timestamps in the API responses are in UTC (Coordinated Universal Time) and 
 | `folder_id` | `string` | Yes | The unique ID of the Folder. |
 | `uploader`  | `string` | Yes | The email or username of the user overwriting the files. |
 | `files`     | `file[]` | Yes | A list of files to be overwritten. The `name` of each uploaded file must match an existing file in the folder. |
-| `start_at`  | `string` | No  | (Optional) New start date of availability (`YYYY-MM-DD`). If `null` provided, the original setting will be kept. |
-| `end_at`    | `string` | No  | (Optional) New end date of availability (`YYYY-MM-DD`). If `null` provided, the original setting will be kept. |
+| `start_at`  | `string` | No  | (Optional) New start date of availability. Supports both YYYY-MM-DD and ISO 8601 formats. If `null` provided, the original setting will be kept. |
+| `end_at`    | `string` | No  | (Optional) New end date of availability. Supports both YYYY-MM-DD and ISO 8601 formats. If `null` provided, the original setting will be kept. |
+| `status`    | `string` | No  | (Optional) New status of the files (`processing`, `success`, or `failed`). Default: `processing`. |
+
+#### Example Request
+```bash
+# Using simple date format
+curl -X PUT 'https://api.example.com/files' \
+  -H 'X-API-Key: cms_12345' \
+  -F 'folder_id=123' \
+  -F 'uploader=user@example.com' \
+  -F 'start_at=2025-03-01' \
+  -F 'end_at=2025-06-01' \
+  -F 'files=@file1.pdf' \
+  -F 'files=@file2.pdf'
+
+# Using ISO 8601 format
+curl -X PUT 'https://api.example.com/files' \
+  -H 'X-API-Key: cms_12345' \
+  -F 'folder_id=123' \
+  -F 'uploader=user@example.com' \
+  -F 'start_at=2025-03-01T00:00:00Z' \
+  -F 'end_at=2025-06-01T00:00:00Z' \
+  -F 'files=@file1.pdf' \
+  -F 'files=@file2.pdf'
+```
 
 #### Response Example
 ```json
@@ -467,30 +573,60 @@ All timestamps in the API responses are in UTC (Coordinated Universal Time) and 
 
 ### 10. Modify File Lifecycle
 **Method:** `PUT`  
-**Endpoint:** `/files/{file_id}/lifecycle`  
-**Description:** Modifies the start and end time of a file. If `start_at` is `null` or not provided, the file becomes active immediately. If `end_at` is `null` or not provided, the file remains active indefinitely.
+**Endpoint:** `/files/lifecycle`  
+**Description:** Modifies the start and end time of multiple files in a folder. If `start_at` is `null` or not provided, the files become active immediately. If `end_at` is `null` or not provided, the files remain active indefinitely.
 
 #### Request Parameters
 | Parameter   | Type    | Required | Description |
 |------------|---------|----------|-------------|
-| `file_id`    | `string`  | Yes | The unique ID of the file to update. |
-| `start_at`   | `string`  | No | The start date of the file's availability (ISO 8601). If `null`, the file is available immediately. |
-| `end_at`     | `string`  | No | The end date of the file's availability (ISO 8601). If `null`, the file remains available indefinitely. |
+| `folder_id`  | `string`  | Yes | The unique ID of the folder containing the files. |
+| `file_ids`   | `array`   | Yes | A list of file IDs to update. |
+| `start_at`   | `string`  | No | The start date of the files' availability. Supports both YYYY-MM-DD and ISO 8601 formats. If `null`, the files are available immediately. |
+| `end_at`     | `string`  | No | The end date of the files' availability. Supports both YYYY-MM-DD and ISO 8601 formats. If `null`, the files remain available indefinitely. |
 
 #### Request Body
 ```json
 {
-  "start_at": null,
-  "end_at": "2024-06-01T00:00:00Z"
+  "folder_id": "123",
+  "file_ids": ["A1B2", "C3D4"],
+  "start_at": "2025-03-01",
+  "end_at": "2025-06-01"
 }
+```
+
+#### Example Request
+```bash
+# Using simple date format
+curl -X PUT 'https://api.example.com/files/lifecycle' \
+  -H 'X-API-Key: cms_12345' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "folder_id": "123",
+    "file_ids": ["A1B2", "C3D4"],
+    "start_at": "2025-03-01",
+    "end_at": "2025-06-01"
+  }'
+
+# Using ISO 8601 format
+curl -X PUT 'https://api.example.com/files/lifecycle' \
+  -H 'X-API-Key: cms_12345' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "folder_id": "123",
+    "file_ids": ["A1B2", "C3D4"],
+    "start_at": "2025-03-01T00:00:00Z",
+    "end_at": "2025-06-01T00:00:00Z"
+  }'
 ```
 
 #### Response Example
 ```json
 {
   "code": 200,
-  "msg": "File lifecycle updated successfully.",
-  "data": null
+  "msg": "Files lifecycle updated successfully.",
+  "data": {
+    "updated": ["A1B2", "C3D4"]
+  }
 }
 ```
 
@@ -499,13 +635,14 @@ All timestamps in the API responses are in UTC (Coordinated Universal Time) and 
 |------------|---------|-------------|
 | `code` | `integer` | HTTP status code of the response. |
 | `msg`    | `string`  | A confirmation message indicating success. |
-| `data`    | `null`    | No additional data is returned. |
+| `data`    | `object`  | Response data. |
+| `updated`  | `array`   | A list of file IDs that were successfully updated. |
 
 #### Status Codes
 - `200 OK` - Successfully updated  
 - `400 Bad Request` - Invalid parameters  
 - `403 Forbidden` - Missing or invalid API Key  
-- `404 Not Found` - File not found  
+- `404 Not Found` - Folder not found or no files were updated  
 - `500 Internal Server Error` - Server-side error  
 
 ---
