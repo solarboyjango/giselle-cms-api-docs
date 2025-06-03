@@ -457,11 +457,13 @@ curl -X POST 'https://api.example.com/upload' \
 
 ---
 
-### 8. Batch Overwrite Existing Files
+### 8. Batch Overwrite Existing Files (Deprecation Notice)
 **Method:** `PUT`  
 **Endpoint:** `/files`  
 **Content-Type:** `multipart/form-data`  
 **Description:** Overwrites existing files in a specified Folder. Files can be updated by any user (not restricted to the original uploader). If `start_at` and `end_at` are not provided, the system will retain the previous availability settings of each file.
+
+> **Deprecation Notice:** This endpoint is deprecated and will be removed in a future version. Please use the "Batch Upload Files" endpoint (`POST /upload`) instead, which now supports automatic overwriting of existing files while preserving their original creation timestamps.
 
 #### Request Parameters
 | Parameter   | Type     | Required | Description  |
