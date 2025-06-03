@@ -26,7 +26,7 @@ All timestamps in the API responses are in UTC (Coordinated Universal Time) and 
 ### 1. Retrieve Folders
 **Method:** `GET`  
 **Endpoint:** `/folders`  
-**Description:** Retrieves a list of available Folders. Supports sorting and searching.
+**Description:** Retrieves a list of available Folders. Supports sorting, searching, and pagination.
 
 #### Request Parameters
 | Parameter   | Type    | Required | Description |
@@ -34,6 +34,8 @@ All timestamps in the API responses are in UTC (Coordinated Universal Time) and 
 | `query`      | `string`  | No | Search keyword to filter Folders by name or prompt. |
 | `sort_by`    | `string`  | No | Field to sort by (e.g., `name`, `created_at`). Default: `name`. |
 | `sort_order` | `string`  | No | Sorting order (`asc` for ascending, `desc` for descending). Default: `asc`. |
+| `page`       | `integer` | No | The page number. Default: `1`. |
+| `page_size`  | `integer` | No | Number of items per page. Default: `10`. |
 
 #### Response Example
 ```json
@@ -41,6 +43,9 @@ All timestamps in the API responses are in UTC (Coordinated Universal Time) and 
   "code": 200,
   "msg": "Folders retrieved successfully.",
   "data": {
+    "total_count": 25,
+    "page": 1,
+    "page_size": 10,
     "folders": [
       {
         "folder_id": "123",
@@ -70,6 +75,9 @@ All timestamps in the API responses are in UTC (Coordinated Universal Time) and 
 |------------|---------|-------------|
 | `code` | `integer` | HTTP status code of the response. |
 | `msg`    | `string`  | A confirmation message indicating success. |
+| `total_count` | `integer` | Total number of folders matching the query. |
+| `page`        | `integer` | Current page number. |
+| `page_size`   | `integer` | Number of folders returned per page. |
 | `folders`    | `array`   | A list of available Folders. |
 | `folder_id`  | `string`  | The unique ID of the Folder. |
 | `name`       | `string`  | The name of the Folder. |
