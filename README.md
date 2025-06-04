@@ -15,30 +15,30 @@ X-API-Key: cms_12345
 ```
 
 ## Time Format
-All timestamps in the API responses are in UTC (Coordinated Universal Time) and follow the ISO 8601 format:
-- Format: `YYYY-MM-DDThh:mm:ss.sssZ`
-- Example: `2024-03-14T10:30:00.000Z`
-- The `Z` suffix indicates UTC timezone
-- Frontend applications should convert these timestamps to local timezone for display
+All timestamps in the API responses are in Unix timestamp format (seconds since epoch):
+- Format: Integer number of seconds since January 1, 1970, 00:00:00 UTC
+- Example: `1710403200` (represents 2024-03-14T10:30:00.000Z)
+- All timestamps are in UTC timezone
+- Frontend applications can easily convert these timestamps to local timezone for display
 
 For API requests, the following date formats are supported:
-1. Simple date format: `YYYY-MM-DD`
+1. Unix timestamp (recommended):
+   - Example: `1710403200`
+   - Represents seconds since epoch in UTC
+
+2. Simple date format: `YYYY-MM-DD`
    - Example: `2025-03-01`
    - When using this format, the time will be set to 00:00:00 UTC of the specified date
-
-2. ISO 8601 format: `YYYY-MM-DDThh:mm:ssZ`
-   - Example: `2025-03-01T00:00:00Z`
-   - The `Z` suffix indicates UTC timezone
-   - You can also use `+00:00` instead of `Z` (e.g., `2025-03-01T00:00:00+00:00`)
+   - The system will automatically convert this to a Unix timestamp
 
 Example API requests with different date formats:
 ```bash
-# Using simple date format
-curl 'https://api.example.com/files/folder/123?start_at_before=2025-06-01&end_at_after=2025-03-01' \
+# Using Unix timestamp
+curl 'https://api.example.com/files/folder/123?start_at_before=1710403200&end_at_after=1709251200' \
   -H 'X-API-Key: cms_12345'
 
-# Using ISO 8601 format
-curl 'https://api.example.com/files/folder/123?start_at_before=2025-06-01T00:00:00Z&end_at_after=2025-03-01T00:00:00Z' \
+# Using simple date format
+curl 'https://api.example.com/files/folder/123?start_at_before=2025-06-01&end_at_after=2025-03-01' \
   -H 'X-API-Key: cms_12345'
 ```
 
@@ -299,10 +299,10 @@ curl 'https://api.example.com/files/folder/123?start_at_after=2024-01-01T00:00:0
         "name": "policy.docx",
         "url": "https://markdownlivepreview-1.com",
         "uploader": "user@example.com",
-        "start_at": "2024-03-01T00:00:00Z",
-        "end_at": "2024-06-01T00:00:00Z",
-        "created_at": "2024-02-20T12:34:56Z",
-        "updated_at": "2024-02-25T10:00:00Z",
+        "start_at": 1710403200,
+        "end_at": 1717200000,
+        "created_at": 1708425296,
+        "updated_at": 1708848000,
         "status": "success"
       }
     ]
@@ -591,13 +591,24 @@ curl -X PUT 'https://api.example.com/files' \
 {
   "folder_id": "123",
   "file_ids": ["A1B2", "C3D4"],
-  "start_at": "2025-03-01",
-  "end_at": "2025-06-01"
+  "start_at": 1710403200,
+  "end_at": 1717200000
 }
 ```
 
 #### Example Request
 ```bash
+# Using Unix timestamp
+curl -X PUT 'https://api.example.com/files/lifecycle' \
+  -H 'X-API-Key: cms_12345' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "folder_id": "123",
+    "file_ids": ["A1B2", "C3D4"],
+    "start_at": 1710403200,
+    "end_at": 1717200000
+  }'
+
 # Using simple date format
 curl -X PUT 'https://api.example.com/files/lifecycle' \
   -H 'X-API-Key: cms_12345' \
@@ -607,17 +618,6 @@ curl -X PUT 'https://api.example.com/files/lifecycle' \
     "file_ids": ["A1B2", "C3D4"],
     "start_at": "2025-03-01",
     "end_at": "2025-06-01"
-  }'
-
-# Using ISO 8601 format
-curl -X PUT 'https://api.example.com/files/lifecycle' \
-  -H 'X-API-Key: cms_12345' \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "folder_id": "123",
-    "file_ids": ["A1B2", "C3D4"],
-    "start_at": "2025-03-01T00:00:00Z",
-    "end_at": "2025-06-01T00:00:00Z"
   }'
 ```
 
@@ -661,8 +661,8 @@ curl -X PUT 'https://api.example.com/files/lifecycle' \
   "msg": "System prompt retrieved successfully.",
   "data": {
     "prompt": "System-wide configuration and settings",
-    "created_at": "2024-01-01T00:00:00Z",
-    "updated_at": "2024-02-25T10:00:00Z",
+    "created_at": 1704067200,
+    "updated_at": 1708848000
   }
 }
 ```
