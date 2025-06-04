@@ -25,10 +25,17 @@ For API requests, the following date formats are supported:
 1. Unix timestamp (recommended):
    - Example: `1710403200`
    - Represents seconds since epoch in UTC
+   - Must be greater than 0 (1970-01-01 00:00:00)
+   - Must be less than 253402300799 (9999-12-31 23:59:59)
 
 2. Simple date format: `YYYY-MM-DD`
    - Example: `2025-03-01`
    - When using this format, the time will be set to 00:00:00 UTC of the specified date
+   - The system will automatically convert this to a Unix timestamp
+
+3. ISO 8601 format: `YYYY-MM-DDThh:mm:ssZ`
+   - Example: `2025-03-01T00:00:00Z`
+   - Must include timezone indicator (Z for UTC)
    - The system will automatically convert this to a Unix timestamp
 
 Example API requests with different date formats:
@@ -39,6 +46,10 @@ curl 'https://api.example.com/files/folder/123?start_at_before=1710403200&end_at
 
 # Using simple date format
 curl 'https://api.example.com/files/folder/123?start_at_before=2025-06-01&end_at_after=2025-03-01' \
+  -H 'X-API-Key: cms_12345'
+
+# Using ISO 8601 format
+curl 'https://api.example.com/files/folder/123?start_at_before=2025-06-01T00:00:00Z&end_at_after=2025-03-01T00:00:00Z' \
   -H 'X-API-Key: cms_12345'
 ```
 
