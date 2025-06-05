@@ -19,6 +19,7 @@ All timestamps in the API responses are in Unix timestamp format (seconds since 
 - Format: Integer number of seconds since January 1, 1970, 00:00:00 UTC
 - Example: `1710403200` (represents 2024-03-14T10:30:00.000Z)
 - All timestamps are in UTC timezone
+- All timestamps are in seconds (not milliseconds)
 - Frontend applications can easily convert these timestamps to local timezone for display
 
 For API requests, the following date formats are supported:
@@ -27,6 +28,7 @@ For API requests, the following date formats are supported:
    - Represents seconds since epoch in UTC
    - Must be greater than 0 (1970-01-01 00:00:00)
    - Must be less than 253402300799 (9999-12-31 23:59:59)
+   - Note: Frontend should convert milliseconds to seconds (divide by 1000) before sending
 
 2. Simple date format: `YYYY-MM-DD`
    - Example: `2025-03-01`
@@ -40,7 +42,7 @@ For API requests, the following date formats are supported:
 
 Example API requests with different date formats:
 ```bash
-# Using Unix timestamp
+# Using Unix timestamp (in seconds)
 curl 'https://api.example.com/files/folder/123?start_at_before=1710403200&end_at_after=1709251200' \
   -H 'X-API-Key: cms_12345'
 
