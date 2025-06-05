@@ -444,7 +444,16 @@ curl -X POST 'https://api.example.com/upload' \
   "code": 200,
   "msg": "Files uploaded successfully.",
   "data": {
-    "uploaded": ["report.docx", "summary.pdf"],
+    "uploaded": [
+      {
+        "name": "report.docx",
+        "file_id": "123456"
+      },
+      {
+        "name": "summary.pdf",
+        "file_id": "1234567"
+      }
+    ],
     "errors": null
   }
 }
@@ -456,7 +465,7 @@ curl -X POST 'https://api.example.com/upload' \
 | `code` | `integer` | HTTP status code of the response. |
 | `msg`    | `string`  | A confirmation message indicating success. |
 | `data`    | `object`  | Response data. |
-| `uploaded` | `array`  | A list of filenames that were successfully uploaded. |
+| `uploaded` | `array`  | A list of successfully uploaded files, each containing `name` and `file_id`. |
 | `errors`   | `array`  | A list of error messages if any uploads failed. |
 
 #### Status Codes
