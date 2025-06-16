@@ -745,6 +745,77 @@ curl -X PUT 'https://api.example.com/files/lifecycle' \
 
 ---
 
+### 13. Activate Knowledge Base
+**Method:** `POST`  
+**Endpoint:** `/folders/{folder_id}/activate`  
+**Description:** Activates a knowledge base. The system enforces a maximum limit on the number of simultaneously active knowledge bases.
+
+#### Request Parameters
+| Parameter   | Type    | Required | Description |
+|------------|---------|----------|-------------|
+| `folder_id`  | `string`  | Yes | The unique ID of the Folder to activate. |
+
+#### Response Example
+```json
+{
+  "code": 200,
+  "msg": "Knowledge base activated successfully",
+  "data": {
+    "folder_id": "123",
+    "status": "active"
+  }
+}
+```
+
+#### Response Parameters
+| Parameter   | Type    | Description |
+|------------|---------|-------------|
+| `code` | `integer` | HTTP status code of the response. |
+| `msg`    | `string`  | A confirmation message indicating success. |
+| `data`    | `object`  | Response data. |
+| `folder_id` | `string` | The ID of the activated folder. |
+| `status`    | `string` | The new status of the folder. |
+
+#### Status Codes
+- `200 OK` - Successfully activated  
+- `400 Bad Request` - Maximum number of active knowledge bases reached  
+- `403 Forbidden` - Missing or invalid API Key  
+- `404 Not Found` - Folder not found  
+- `500 Internal Server Error` - Server-side error  
+
+---
+
+### 14. Get Active Knowledge Bases Count
+**Method:** `GET`  
+**Endpoint:** `/folders/active/count`  
+**Description:** Retrieves the current count of active knowledge bases and the maximum allowed limit.
+
+#### Response Example
+```json
+{
+  "code": 200,
+  "msg": "Active knowledge bases count retrieved successfully",
+  "data": {
+    "active_count": 2,
+    "max_allowed": 3
+  }
+}
+```
+
+#### Response Parameters
+| Parameter   | Type    | Description |
+|------------|---------|-------------|
+| `code` | `integer` | HTTP status code of the response. |
+| `msg`    | `string`  | A confirmation message indicating success. |
+| `data`    | `object`  | Response data. |
+| `active_count` | `integer` | Current number of active knowledge bases. |
+| `max_allowed`  | `integer` | Maximum number of knowledge bases allowed to be active simultaneously. |
+
+#### Status Codes
+- `200 OK` - Successfully retrieved count  
+- `403 Forbidden` - Missing or invalid API Key  
+- `500 Internal Server Error` - Server-side error  
+
 ## Error Handling
 | Error Code | Description |
 |------------|-------------|
