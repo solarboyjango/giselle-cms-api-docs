@@ -764,6 +764,153 @@ curl -X PUT 'https://api.example.com/files/lifecycle' \
 - `403 Forbidden` - Missing or invalid API Key  
 - `500 Internal Server Error` - Server-side error  
 
+---
+
+### 13. Process Single File ETL
+**Method:** `POST`  
+**Endpoint:** `/etl/files/{folder_id}/{file_id}`  
+**Description:** Processes a single file for ETL (Extract, Transform, Load) operations. This endpoint allows direct processing of a specific file without going through the automatic ETL queue.
+
+#### Request Parameters
+| Parameter   | Type    | Required | Description |
+|------------|---------|----------|-------------|
+| `folder_id`  | `string`  | Yes | The unique ID of the Folder containing the file. |
+| `file_id`    | `string`  | Yes | The unique ID of the file to process. |
+
+#### Example Request
+```bash
+curl -X POST 'https://api.example.com/etl/files/123/456' \
+  -H 'X-API-Key: cms_12345'
+```
+
+#### Response Example
+```json
+{
+  "code": 200,
+  "msg": "File processing started successfully",
+  "data": {
+    "file_id": "456",
+    "status": "success",
+    "vector_count": 150,
+    "is_available": true
+  }
+}
+```
+
+#### Response Parameters
+| Parameter   | Type    | Description |
+|------------|---------|-------------|
+| `code` | `integer` | HTTP status code of the response. |
+| `msg`    | `string`  | A confirmation message indicating success. |
+| `data`    | `object`  | Response data. |
+| `file_id`     | `string`  | The ID of the processed file. |
+| `status`      | `string`  | Processing status (`success` or `failed`). |
+| `vector_count` | `integer` | Number of vectors generated from the file. |
+| `is_available` | `boolean` | Whether the file is currently available based on its lifecycle settings. |
+
+#### Status Codes
+- `200 OK` - File processing started successfully
+- `400 Bad Request` - Invalid parameters or file already being processed
+- `403 Forbidden` - Missing or invalid API Key
+- `404 Not Found` - File not found in the specified folder
+- `500 Internal Server Error` - Server-side error
+
+#### Error Response Examples
+
+1. File Already Being Processed:
+```json
+{
+  "code": 200,
+  "msg": "File is already being processed",
+  "data": {
+    "file_id": "456",
+    "status": "processed"
+  }
+}
+```
+
+2. File Not Found:
+```json
+{
+  "code": 404,
+  "msg": "File 456 not found in folder 123",
+  "data": null
+}
+```
+
+---
+
+### 14. ETL Ping (Auto Processing)
+**Method:** `POST`  
+**Endpoint:** `/etl/ping`  
+**Description:** Triggers automatic ETL processing by starting an idle processor to handle pending files. This endpoint is designed to be called periodically to maintain continuous ETL processing.
+
+#### Example Request
+```bash
+curl -X POST 'https://api.example.com/etl/ping' \
+  -H 'X-API-Key: cms_12345'
+```
+
+#### Response Example
+```json
+{
+  "code": 200,
+  "msg": "ETL ping completed. Started 1 ETL processors",
+  "data": {
+    "running_count": 1,
+    "processors_id": 1
+  }
+}
+```
+
+#### Response Parameters
+| Parameter   | Type    | Description |
+|------------|---------|-------------|
+| `code` | `integer` | HTTP status code of the response. |
+| `msg`    | `string`  | A confirmation message indicating success. |
+| `data`    | `object`  | Response data. |
+| `running_count` | `integer` | Number of processors currently running ETL operations. |
+| `processors_id` | `integer` | ID of the processor that was started (null if no idle processor was available). |
+
+#### Status Codes
+- `200 OK` - ETL ping completed successfully
+- `403 Forbidden` - Missing or invalid API Key
+- `500 Internal Server Error` - Server-side error
+
+#### Response Examples
+
+1. When an idle processor is available:
+```json
+{
+  "code": 200,
+  "msg": "ETL ping completed. Started 1 ETL processors",
+  "data": {
+    "running_count": 1,
+    "processors_id": 1
+  }
+}
+```
+
+2. When no idle processor is available:
+```json
+{
+  "code": 200,
+  "msg": "ETL ping completed. Started 0 ETL processors",
+  "data": {
+    "running_count": 2,
+    "processors_id": null
+  }
+}
+```
+
+#### Notes
+- This endpoint is designed to be called periodically (e.g., every minute) to maintain continuous ETL processing
+- Only one processor is started per ping to avoid overwhelming the system
+- The processor will automatically handle multiple files until no more pending files are available
+- Processors work independently and can handle files concurrently
+
+---
+
 ## Error Handling
 | Error Code | Description |
 |------------|-------------|
@@ -778,7 +925,3 @@ A developer wants to retrieve all available knowledge bases in the system to all
 
 ### Use Case 2: Uploading a Document to a Folder
 A user wants to upload a new document to an existing Folder.
-
-
-
-
