@@ -3,6 +3,15 @@
 ## Overview
 This document provides an overview of the API endpoints available for managing Folder documents in the backend service. The API is designed based on the Retrieval-Augmented Generation (RAG) framework to support document retrieval and response generation.
 
+## Database Auto-Initialization
+The application automatically initializes the database on startup:
+- **Collections**: Creates all necessary collections (`folders`, `files`, `vectorstore`, `etl_processors`, `etl_history`)
+- **Indexes**: Creates all required indexes with unique names to avoid conflicts
+- **System Data**: Initializes system knowledge base if it doesn't exist
+- **Safety**: Uses safe index creation that skips existing indexes
+
+**No manual database setup required** - the application handles everything automatically on first run and subsequent deployments.
+
 ## Authentication & Authorization
 - **Authentication Method**: API Key
 - **API Key Format**: `cms_12345`
