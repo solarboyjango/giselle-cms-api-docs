@@ -920,6 +920,77 @@ curl -X POST 'https://api.example.com/etl/ping' \
 
 ---
 
+### 15. Retrieve Chat Logs by Conversation
+**Method:** `GET`  
+**Endpoint:** `/chatlog/conversation/{conversation_id}/channel/{channel_id}/user/{user_id}`  
+**Description:** Retrieves chat logs for a specific conversation, extracting metadata and formatting the response for easy consumption.
+
+#### Request Parameters
+| Parameter   | Type    | Required | Description |
+|------------|---------|----------|-------------|
+| `conversation_id` | `string` | Yes | The unique conversation ID to retrieve logs for. |
+| `channel_id` | `string` | Yes | The channel identifier (e.g., "webchat", "directline"). |
+| `user_id` | `string` | Yes | The unique user identifier. |
+
+#### Example Request
+```bash
+curl -X GET "https://api.example.com/chatlog/conversation/1752304746/channel/webchat/user/febf6976-d245-4490-a38a-7fd9e905e3df" \
+  -H "X-API-Key: cms_12345" \
+  -H "Content-Type: application/json"
+```
+
+#### Response Example
+```json
+{
+  "code": 200,
+  "msg": "Chat logs retrieved successfully",
+  "data": [
+    {
+      "conversation_id": "1752304746",
+      "channel_id": "webchat",
+      "created_at": 1752275951,
+      "meta": [
+        {
+          "title": "G492.txt"
+        },
+        {
+          "title": "114期導入文創打開市場敲門磚.pdf"
+        },
+        {
+          "title": "132期運用ChatGPT生成文章的步驟.pdf"
+        }
+      ]
+    }
+  ]
+}
+```
+
+#### Response Parameters
+| Parameter   | Type    | Description |
+|------------|---------|-------------|
+| `code` | `integer` | HTTP status code of the response. |
+| `msg` | `string` | A confirmation message indicating success. |
+| `data` | `array` | Array of chat log summaries. |
+| `conversation_id` | `string` | The conversation identifier. |
+| `channel_id` | `string` | The channel identifier. |
+| `created_at` | `integer` | Unix timestamp when the chat log was created. |
+| `meta` | `array` | Array of metadata objects containing document titles. |
+| `title` | `string` | The title of the referenced document. |
+
+#### Status Codes
+- `200 OK` - Chat logs retrieved successfully
+- `403 Forbidden` - Missing or invalid API Key
+- `500 Internal Server Error` - Server-side error
+
+#### Notes
+- Only chat logs with valid metadata are returned
+- The `meta` field contains extracted document titles from the original chat log metadata
+- Timestamps are returned in Unix timestamp format (seconds since epoch)
+- Documents without metadata are automatically filtered out
+- The API supports multiple metadata objects per chat log entry
+
+---
+
 ## Error Handling
 | Error Code | Description |
 |------------|-------------|
