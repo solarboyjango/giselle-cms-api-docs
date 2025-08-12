@@ -1005,3 +1005,7 @@ A developer wants to retrieve all available knowledge bases in the system to all
 
 ### Use Case 2: Uploading a Document to a Folder
 A user wants to upload a new document to an existing Folder.
+
+
+
+
