@@ -52,15 +52,15 @@ For API requests, the following date formats are supported:
 Example API requests with different date formats:
 ```bash
 # Using Unix timestamp (in seconds)
-curl 'https://api.example.com/files/folder/123?start_at_before=1710403200&end_at_after=1709251200' \
+curl 'https://api.example.com/files/folder/123?start_at=1709251200&end_at=1710403200' \
   -H 'X-API-Key: cms_12345'
 
 # Using simple date format
-curl 'https://api.example.com/files/folder/123?start_at_before=2025-06-01&end_at_after=2025-03-01' \
+curl 'https://api.example.com/files/folder/123?start_at=2025-03-01&end_at=2025-06-01' \
   -H 'X-API-Key: cms_12345'
 
 # Using ISO 8601 format
-curl 'https://api.example.com/files/folder/123?start_at_before=2025-06-01T00:00:00Z&end_at_after=2025-03-01T00:00:00Z' \
+curl 'https://api.example.com/files/folder/123?start_at=2025-03-01T00:00:00Z&end_at=2025-06-01T00:00:00Z' \
   -H 'X-API-Key: cms_12345'
 ```
 
@@ -331,10 +331,8 @@ curl 'https://api.example.com/folders?tags=6540d3a51234567890abcdef&page=1&page_
 |------------|---------|----------|-------------|
 | `folder_id`  | `string`  | Yes | The unique ID of the Folder. |
 | `{field}`    | `string`  | No | Search by field value. Available fields: `name`, `uploader`, `status`. Example: `name=policy.docx` or `status=processing`. |
-| `start_at_after` | `string` | No | Filter files with start_at after this date (ISO 8601 format). Example: `2024-01-01T00:00:00Z`. |
-| `start_at_before` | `string` | No | Filter files with start_at before this date (ISO 8601 format). Example: `2024-12-31T23:59:59Z`. |
-| `end_at_after` | `string` | No | Filter files with end_at after this date (ISO 8601 format). Example: `2024-01-01T00:00:00Z`. |
-| `end_at_before` | `string` | No | Filter files with end_at before this date (ISO 8601 format). Example: `2024-12-31T23:59:59Z`. |
+| `start_at` | `string` | No | Filter files that are effective at or before this time. Can be Unix timestamp, YYYY-MM-DD, or ISO 8601 format. Example: `1710403200`, `2024-03-15`, or `2024-03-15T00:00:00Z`. |
+| `end_at` | `string` | No | Filter files that are still effective at or after this time. Can be Unix timestamp, YYYY-MM-DD, or ISO 8601 format. Example: `1717200000`, `2024-06-15`, or `2024-06-15T00:00:00Z`. |
 | `sort_field` | `string`  | No | Field to sort by (e.g., `name`, `created_at`). Default: `name`. |
 | `sort_order` | `string`  | No | Sorting order (`ascend` or `descend`). Default: `ascend`. |
 | `page`       | `integer` | No | The page number. Default: `1`. |
@@ -346,16 +344,25 @@ curl 'https://api.example.com/folders?tags=6540d3a51234567890abcdef&page=1&page_
 curl 'https://api.example.com/files/folder/123?name=policy.docx&status=processing&page=1&page_size=10' \
   -H 'X-API-Key: cms_12345'
 
-# Search by time range
-curl 'https://api.example.com/files/folder/123?start_at_after=2024-01-01T00:00:00Z&start_at_before=2024-12-31T23:59:59Z&page=1&page_size=10' \
+# Search by time range (files effective between start_at and end_at)
+curl 'https://api.example.com/files/folder/123?start_at=2024-03-15&end_at=2024-06-15&page=1&page_size=10' \
+  -H 'X-API-Key: cms_12345'
+
+# Search by Unix timestamp
+curl 'https://api.example.com/files/folder/123?start_at=1710403200&end_at=1717200000&page=1&page_size=10' \
   -H 'X-API-Key: cms_12345'
 ```
 
 #### Notes
 - `folder_id` is not searchable as it is already specified in the URL path
 - `file_id` is not searchable as it is a system-generated unique identifier. To retrieve a specific file, use the dedicated endpoint `/files/{file_id}`
-- Time range search can be used to find files that are active during a specific period
-- All timestamps should be in ISO 8601 format with UTC timezone
+- Time range search logic:
+  - When both `start_at` and `end_at` are provided: finds files that are effective during the specified time range
+  - When only `start_at` is provided: finds files that are effective at or before the specified time
+  - When only `end_at` is provided: finds files that are still effective at or after the specified time
+  - Files without a `start_at` field are considered to have been effective from the beginning (always effective)
+  - Files without an `end_at` field are considered to have no expiration date (always effective)
+- Supported time formats: Unix timestamp, YYYY-MM-DD, or ISO 8601 format (e.g., 2024-03-15T00:00:00Z)
 
 #### Response Example
 ```json
