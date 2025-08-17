@@ -74,7 +74,7 @@ curl 'https://api.example.com/files/folder/123?start_at_before=2025-06-01T00:00:
 #### Request Parameters
 | Parameter   | Type    | Required | Description |
 |------------|---------|----------|-------------|
-| `{field}`    | `string`  | No | Search by field value. Available fields: `name`, `prompt`, `status`, `type`, `folder_id`. Example: `name=知識庫6` or `status=active`. |
+| `{field}`    | `string`  | No | Search by field value. Available fields: `name`, `prompt`, `status`, `type`, `folder_id`, `tags`. Example: `name=知識庫6`, `status=active`, or `tags=6540d3a51234567890abcdef`. |
 | `sort_field` | `string`  | No | Field to sort by (e.g., `name`, `created_at`). Default: `name`. |
 | `sort_order` | `string`  | No | Sorting order (`ascend` or `descend`). Default: `ascend`. |
 | `page`       | `integer` | No | The page number. Default: `1`. |
@@ -82,7 +82,12 @@ curl 'https://api.example.com/files/folder/123?start_at_before=2025-06-01T00:00:
 
 #### Example Request
 ```bash
+# Search by name
 curl 'https://api.example.com/folders?name=知識庫6&page=1&page_size=10&sort_field=name&sort_order=descend' \
+  -H 'X-API-Key: cms_12345'
+
+# Search by tags
+curl 'https://api.example.com/folders?tags=6540d3a51234567890abcdef&page=1&page_size=10' \
   -H 'X-API-Key: cms_12345'
 ```
 
@@ -103,7 +108,8 @@ curl 'https://api.example.com/folders?name=知識庫6&page=1&page_size=10&sort_f
         "created_at": "2024-02-20T12:34:56Z",
         "updated_at": "2024-02-25T10:00:00Z",
         "status": "active",
-        "type": "knowledge_base"
+        "type": "knowledge_base",
+        "tags": ["6540d3a51234567890abcdef", "6540d3b8fedcba9876543210"]
       },
       {
         "folder_id": "456",
@@ -112,7 +118,8 @@ curl 'https://api.example.com/folders?name=知識庫6&page=1&page_size=10&sort_f
         "created_at": "2024-01-15T08:00:00Z",
         "updated_at": "2024-01-20T14:30:00Z",
         "status": "inactive",
-        "type": "knowledge_base"
+        "type": "knowledge_base",
+        "tags": []
       }
     ]
   }
@@ -136,6 +143,7 @@ curl 'https://api.example.com/folders?name=知識庫6&page=1&page_size=10&sort_f
 | `updated_at` | `string`  | The timestamp of the last update to the Folder (ISO 8601 format). |
 | `status`     | `string`  | The current status of the Folder (`active` for enabled, `inactive` for disabled). |
 | `type`       | `string`  | Type of Folder (`knowledge_base`). |
+| `tags`       | `array`   | Array of tag IDs associated with the Folder. Empty array if no tags. |
 
 #### Status Codes
 - `200 OK` - Successful retrieval  
@@ -155,7 +163,8 @@ curl 'https://api.example.com/folders?name=知識庫6&page=1&page_size=10&sort_f
   "name": "New Folder",
   "prompt": "Short description or usage hint",
   "status": "active",
-  "type": "knowledge_base"
+  "type": "knowledge_base",
+  "tags": ["6540d3a51234567890abcdef", "6540d3b8fedcba9876543210"]
 }
 ```
 
@@ -166,6 +175,7 @@ curl 'https://api.example.com/folders?name=知識庫6&page=1&page_size=10&sort_f
 | `prompt` | `string` | No  | Description or usage hint. |
 | `status` | `string` | No  | Status (`active` or `inactive`). Default: `inactive`. |
 | `type`   | `string` | Yes | Must be `knowledge_base`. Cannot create `system` type. |
+| `tags`   | `array`  | No  | Array of tag IDs (24-character strings). Example: `["6540d3a51234567890abcdef", "6540d3b8fedcba9876543210"]`. |
 
 #### Response Example
 ```json
@@ -209,7 +219,8 @@ curl 'https://api.example.com/folders?name=知識庫6&page=1&page_size=10&sort_f
 {
   "name": "Updated Folder Name",
   "prompt": "Updated prompt description",
-  "status": "active"
+  "status": "active",
+  "tags": ["6540d3a51234567890abcdef", "6540d3b8fedcba9876543210"]
 }
 ```
 
@@ -219,6 +230,7 @@ curl 'https://api.example.com/folders?name=知識庫6&page=1&page_size=10&sort_f
 | `name`   | `string` | No | The new name of the Folder. |
 | `prompt` | `string` | No | The new description or recommended usage of the Folder. |
 | `status` | `string` | No | The status of the Folder (`active` for enabled, `inactive` for disabled). |
+| `tags`   | `array`  | No | Array of tag IDs (24-character strings). Example: `["6540d3a51234567890abcdef", "6540d3b8fedcba9876543210"]`. |
 
 #### Response Example
 ```json
@@ -258,6 +270,24 @@ curl 'https://api.example.com/folders?name=知識庫6&page=1&page_size=10&sort_f
 {
   "code": 409,
   "msg": "Maximum number of active knowledge bases reached",
+  "data": null
+}
+```
+
+3. Invalid Tag Format:
+```json
+{
+  "code": 400,
+  "msg": "Invalid tag ID format. Each tag ID must be a 24-character string",
+  "data": null
+}
+```
+
+4. Invalid Tags Format:
+```json
+{
+  "code": 400,
+  "msg": "Tags must be a list of tag IDs",
   "data": null
 }
 ```
