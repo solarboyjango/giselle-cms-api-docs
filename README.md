@@ -1043,6 +1043,55 @@ A developer wants to retrieve all available knowledge bases in the system to all
 ### Use Case 2: Uploading a Document to a Folder
 A user wants to upload a new document to an existing Folder.
 
+---
+
+### 16. Reset Knowledge Base
+**Method:** `POST`
+**Endpoint:** `/folders/reset`
+**Description:** Resets all knowledge base folders to their default state. This operation will backup existing knowledge bases, delete them completely (including Azure Storage files), and recreate them with default names and configurations.
+
+> ** Warning:** This is a destructive operation that will permanently delete all files and data in existing knowledge bases. Use with extreme caution.
+
+#### Request Body
+No request body required.
+
+#### Response Example
+```json
+{
+  "code": 200,
+  "msg": "Knowledge base reset completed successfully",
+  "data": {
+    "status": "reset_completed",
+    "timestamp": 1717200000
+  }
+}
+```
+
+#### Response Parameters
+| Parameter   | Type    | Description |
+|------------|---------|-------------|
+| `code` | `integer` | HTTP status code of the response. |
+| `msg`    | `string`  | A confirmation message indicating success. |
+| `data`    | `object`  | Response data. |
+| `status`     | `string`  | Status of the reset operation (`reset_completed`). |
+| `timestamp`  | `integer` | Unix timestamp when the reset was completed. |
+
+#### Status Codes
+- `200 OK` - Knowledge base reset completed successfully
+- `403 Forbidden` - Missing or invalid API Key
+- `500 Internal Server Error` - Failed to reset knowledge base or server-side error
+
+#### What Happens During Reset
+1. **Backup Phase**: All existing knowledge base folders are backed up (name, prompt, status, tags)
+2. **Deletion Phase**: All knowledge base folders are deleted from MongoDB and Azure Storage
+3. **Recreation Phase**: New knowledge base folders are created with default names ("Knowledge Base 1", "Knowledge Base 2", etc.) and default prompts
+4. **Default State**: All recreated folders are set to "inactive" status with empty tags
+
+#### Use Cases
+- **Development/Testing**: Reset the system to a clean state for testing
+- **System Recovery**: Recover from corrupted knowledge base configurations
+- **Fresh Start**: Start over with a clean knowledge base system
+
 
 
 
