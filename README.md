@@ -1048,20 +1048,47 @@ A user wants to upload a new document to an existing Folder.
 ### 16. Reset Knowledge Base
 **Method:** `POST`
 **Endpoint:** `/folders/reset`
-**Description:** Resets all knowledge base folders to their default state. This operation will backup existing knowledge bases, delete them completely (including Azure Storage files), and recreate them with default names and configurations.
+**Description:** Resets knowledge base folders to their default state. This operation will backup existing knowledge bases, delete them completely (including Azure Storage files), and recreate them with default names and configurations.
+
+**Two modes supported:**
+1. **Reset specific folder**: Provide `folder_id` to reset only the specified knowledge base folder
+2. **Reset all folders**: Omit `folder_id` to reset all knowledge base folders
 
 > ** Warning:** This is a destructive operation that will permanently delete all files and data in existing knowledge bases. Use with extreme caution.
 
 #### Request Body
-No request body required.
+```json
+{
+  "folder_id": "optional_folder_id_here"
+}
+```
 
-#### Response Example
+**Parameters:**
+- `folder_id` (string, optional): The ID of the specific knowledge base folder to reset. If not provided, all knowledge base folders will be reset.
+
+#### Response Examples
+
+**Reset all folders:**
 ```json
 {
   "code": 200,
-  "msg": "Knowledge base reset completed successfully",
+  "msg": "All knowledge base folders reset completed successfully",
   "data": {
     "status": "reset_completed",
+    "folder_id": null,
+    "timestamp": 1717200000
+  }
+}
+```
+
+**Reset specific folder:**
+```json
+{
+  "code": 200,
+  "msg": "Knowledge base folder 507f1f77bcf86cd799439011 reset completed successfully",
+  "data": {
+    "status": "reset_completed",
+    "folder_id": "507f1f77bcf86cd799439011",
     "timestamp": 1717200000
   }
 }
