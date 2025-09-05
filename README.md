@@ -1056,15 +1056,18 @@ A user wants to upload a new document to an existing Folder.
 
 > ** Warning:** This is a destructive operation that will permanently delete all files and data in existing knowledge bases. Use with extreme caution.
 
-#### Request Body
-```json
-{
-  "folder_id": "optional_folder_id_here"
-}
-```
+#### Request Parameters
+| Parameter   | Type    | Required | Description |
+|------------|---------|----------|-------------|
+| `folder_id`  | `string`  | No | The ID of the specific knowledge base folder to reset. If not provided, all knowledge base folders will be reset. |
 
-**Parameters:**
-- `folder_id` (string, optional): The ID of the specific knowledge base folder to reset. If not provided, all knowledge base folders will be reset.
+#### Example Request
+```bash
+curl -X POST 'https://api.example.com/folders/reset' \
+  -H 'X-API-Key: cms_12345' \
+  -H 'Content-Type: application/json' \
+  -d '{"folder_id": "507f1f77bcf86cd799439011"}'
+```
 
 #### Response Examples
 
@@ -1100,8 +1103,9 @@ A user wants to upload a new document to an existing Folder.
 | `code` | `integer` | HTTP status code of the response. |
 | `msg`    | `string`  | A confirmation message indicating success. |
 | `data`    | `object`  | Response data. |
-| `status`     | `string`  | Status of the reset operation (`reset_completed`). |
-| `timestamp`  | `integer` | Unix timestamp when the reset was completed. |
+| `status`      | `string`  | Reset status (`reset_completed`). |
+| `folder_id`     | `string`  | The ID of the reset folder (null if all folders were reset). |
+| `timestamp` | `integer` | Unix timestamp of when the reset was completed. |
 
 #### Status Codes
 - `200 OK` - Knowledge base reset completed successfully
